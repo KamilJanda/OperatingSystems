@@ -18,9 +18,9 @@ char** create_array_of_blocks(int sizeOfTable, int sizeOfBlock)
     return newArrayOfBlocks;
 }
 
-void** delete_array_of_blocks()
+void** delete_array_of_blocks(char** array)
 {
-
+    free(array);
 }
 
 char** add_block(char** array,int arraySize,int index,char* block)
