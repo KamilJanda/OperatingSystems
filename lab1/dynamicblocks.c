@@ -4,15 +4,20 @@
 
 #include "dynamicblocks.h"
 #include <stdlib.h>
+#include <math.h>
 
 
-char** create_array_of_blocks(int sizeOfTable, int sizeOfBlock)
+ArrayOfBlocks* create_array_of_blocks(int sizeOfArray, int sizeOfBlock)
 {
-    char** newArrayOfBlocks = calloc(sizeOfTable, sizeof(char*));
+    ArrayOfBlocks* newArrayOfBlocks=malloc(sizeof(ArrayOfBlocks));
 
-    for(int i=0;i<sizeOfTable;i++)
+    newArrayOfBlocks -> sizeOfArray = sizeOfArray;
+    newArrayOfBlocks -> sizeOfBlock = sizeOfBlock;
+    newArrayOfBlocks -> array = calloc(sizeOfArray, sizeof(char*));
+
+    for(int i=0;i<sizeOfArray;i++)
     {
-        newArrayOfBlocks[i] = calloc(sizeOfBlock, sizeof(char));
+        newArrayOfBlocks -> array[i] = calloc(sizeOfBlock, sizeof(char));
     }
 
     return newArrayOfBlocks;
@@ -23,43 +28,76 @@ void** delete_array_of_blocks(char** array)
     free(array);
 }
 
-char** add_block(char** array,int arraySize,int index,char* block)
+ArrayOfBlocks* add_block(ArrayOfBlocks* arrayOfBlocks,int index,char* block)
 {
-    int newSizeOfArray = arraySize+1;
+    int newSizeOfArray =arrayOfBlocks -> sizeOfArray+1;
     char** newArray = calloc(newSizeOfArray, sizeof(char*));
 
     for(int i=0;i<index;i++)
     {
-        newArray[i] = array[i];
+        newArray[i] = arrayOfBlocks -> array[i];
     }
 
     newArray[index] = block;
 
     for (int i = index+1; i < newSizeOfArray; ++i) {
-        newArray[i] = array[i];
+        newArray[i] = arrayOfBlocks -> array[i];
     }
 
-    free(array);
+    free(arrayOfBlocks -> array);
 
-    return newArray;
+    arrayOfBlocks -> array = newArray;
+    return arrayOfBlocks;
 }
 
-char** delete_block(char** array,int arraySize,int index)
+ArrayOfBlocks* delete_block(ArrayOfBlocks* arrayOfBlocks,int index)
 {
-    int newSizeOfArray = arraySize-1;
+    int newSizeOfArray =arrayOfBlocks -> sizeOfArray-1;
     char** newArray = calloc(newSizeOfArray, sizeof(char*));
 
     for(int i=0;i<index;i++)
     {
-        newArray[i] = array[i];
+        newArray[i] =arrayOfBlocks ->  array[i];
     }
 
     for (int i = index+1; i < newSizeOfArray; ++i) {
-        newArray[i] = array[i];
+        newArray[i] =arrayOfBlocks ->  array[i];
     }
 
-    free(array);
-
-    return newArray;
+    free(arrayOfBlocks -> array);
+    arrayOfBlocks -> array = newArray;
+    return arrayOfBlocks;
 }
 
+
+char* find_block(ArrayOfBlocks* arrayOfBlocks, int sum)
+{
+    int tmpSum = 0;
+    int indexOfMinDiff = -1;
+    int minDifference = INT16_MAX;
+
+    for(int i=0;i<arrayOfBlocks -> sizeOfArray;i++)
+    {
+        tmpSum = sum_of_block(arrayOfBlocks -> array[i],arrayOfBlocks -> sizeOfBlock);
+
+        int diff = abs(sum-tmpSum);
+
+        if(diff<minDifference)
+        {
+            minDifference = diff;
+            indexOfMinDiff = i;
+        }
+    }
+
+    return arrayOfBlocks -> array[indexOfMinDiff];
+}
+
+int sum_of_block(char* block, int size)
+{
+    int sum = 0;
+    for(int i=0;i<size;i++)
+    {
+        sum += (int)block[i];
+    }
+    return sum;
+}

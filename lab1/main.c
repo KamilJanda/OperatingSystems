@@ -3,9 +3,9 @@
 
 int main() {
 
-    char** test = create_array_of_blocks(2,3);
+    ArrayOfBlocks* test = create_array_of_blocks(2,3);
 
 
-    printf("%d",test[1][2]);
+    printf("%d",test-> array[1][2]);
     return 0;
 }
