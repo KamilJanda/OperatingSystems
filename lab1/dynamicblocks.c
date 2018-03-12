@@ -15,9 +15,18 @@ ArrayOfBlocks* create_array_of_blocks(int sizeOfArray, int sizeOfBlock)
     newArrayOfBlocks -> sizeOfBlock = sizeOfBlock;
     newArrayOfBlocks -> array = calloc(sizeOfArray, sizeof(char*));
 
+    srand(time(NULL)); 
+
     for(int i=0;i<sizeOfArray;i++)
     {
         newArrayOfBlocks -> array[i] = calloc(sizeOfBlock, sizeof(char));
+
+        for(int j=0;j<newArrayOfBlocks -> sizeOfBlock;j++)
+        {
+           int r = rand()%25+97;
+           newArrayOfBlocks -> array[i][j]=(char)r; 
+        }
+
     }
 
     return newArrayOfBlocks;
@@ -100,4 +109,21 @@ int sum_of_block(char* block, int size)
         sum += (int)block[i];
     }
     return sum;
+}
+
+void fill_in_with_random_data(ArrayOfBlocks* arrayOfBlocks)
+{
+
+    srand(time(NULL)); 
+
+    for(int i=0; arrayOfBlocks -> sizeOfArray;i++)
+    {
+
+        for(int j=0;j<arrayOfBlocks -> sizeOfBlock;j++)
+        {
+           int r = rand()%25+97;
+           arrayOfBlocks -> array[i][j]=(char)r; 
+        }
+    }
+
 }
