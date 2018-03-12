@@ -3,23 +3,23 @@
 
 typedef struct
 {
-    char** array;
+    char **array;
     int sizeOfArray;
     int sizeOfBlock;
-}ArrayOfBlocks;
+} ArrayOfBlocks;
 
-ArrayOfBlocks* create_array_of_blocks(int sizeOfTable, int sizeOfBlock);
+ArrayOfBlocks *create_array_of_blocks(int sizeOfTable, int sizeOfBlock);
 
-void** delete_array_of_blocks(char** array);
+void **delete_array_of_blocks(char **array);
 
-ArrayOfBlocks* add_block(ArrayOfBlocks* arrayOfBlocks,int index,char* block);
+ArrayOfBlocks *add_block(ArrayOfBlocks *arrayOfBlocks, int index, char *block);
 
-ArrayOfBlocks* delete_block(ArrayOfBlocks* arrayOfBlocks,int index);
+ArrayOfBlocks *delete_block(ArrayOfBlocks *arrayOfBlocks, int index);
 
-char* find_block(ArrayOfBlocks* arrayOfBlocks, int sum);
+char *find_block(ArrayOfBlocks *arrayOfBlocks, int sum);
 
-int sum_of_block(char* block, int size);
+int sum_of_block(char *block, int size);
 
-void fill_in_with_random_data(ArrayOfBlocks* arrayOfBlocks);
+void fill_in_with_random_data(ArrayOfBlocks *arrayOfBlocks);
 
 #endif

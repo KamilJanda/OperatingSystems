@@ -4,23 +4,25 @@
 #include <sys/times.h>
 #include "dynamicblocks.h"
 
-#include <unistd.h> 
+#include <unistd.h>
 
-void createArray();
+void create();
+void find();
+void add_remove_dynamic(ArrayOfBlocks *dynamicArray, int numberOfAddRemove);
 void start_clock(void);
 void end_clock(double *results);
-void print_results(double* timeCreateFunc);
+void print_results(double *timeCreateFunc, double *timeFindFunc, double *timeAddremoveFunc);
 
-
-//variables used to measure duration of operations 
+//variables used to measure duration of operations
 static clock_t st_time;
 static clock_t en_time;
 static struct tms st_cpu;
 static struct tms en_cpu;
 
-int main( int argc, char *argv[])  {
+int main(int argc, char *argv[])
+{
 
-    if(argc<5)
+    if (argc < 5)
     {
         printf("Too few arguments\n");
         printf("example call: ./main [size of array] [size of blocks] [d/s] [operations]\n");
@@ -36,48 +38,108 @@ int main( int argc, char *argv[])  {
 
     int numberOfOperation = argc - 4;
 
-    char* operations[numberOfOperation];
+    char *operations[numberOfOperation];
 
-    for(int i=0;i<numberOfOperation;i++)
+    for (int i = 0; i < numberOfOperation; i++)
     {
-        operations[i] = argv[i+4];
+        operations[i] = argv[i + 4];
     }
 
+    //printf("%s \n",operations[0]);
 
-    printf("%s \n",operations[0]);
-
-    ArrayOfBlocks* dynamicArray; //= NULL;    
+    ArrayOfBlocks *dynamicArray; //= NULL;
 
     //measure of time results
-    double* timeCreateFunc =(double*) malloc(3*sizeof(double));
+    double *timeCreateFunc = (double *)malloc(3 * sizeof(double));
+    double *timeFindFunc = (double *)malloc(3 * sizeof(double));
+    double *timeAddremoveFunc = (double *)malloc(3 * sizeof(double));
 
-
-    for(int i=0;i<numberOfOperation;i++)
+    for (int i = 0; i < numberOfOperation; i++)
     {
-        if(strcmp(operations[i],"create") == 0)
+        if (strcmp(operations[i], "create") == 0)
         {
             //start time measure
             start_clock();
 
-            dynamicArray = create_array_of_blocks(arraySize,blockSize);
+            dynamicArray = create_array_of_blocks(arraySize, blockSize);
 
             //end time measure
             end_clock(timeCreateFunc);
         }
-        else if(strcmp(operations[i],"find") == 0)
+        else if (strcmp(operations[i], "find") == 0)
         {
+            i++;
+            if (i >= numberOfOperation || strcmp(operations[i], "create") == 0 || strcmp(operations[i], "addremove") == 0 || strcmp(operations[i], "find") == 0)
+            {
+                printf("Invalid argument after find\n");
+                return 0;
+            }
 
+            char *pattern = operations[i];
+
+            int sumOfPattern = sum_of_block(pattern, dynamicArray->sizeOfBlock);
+
+            //start time measure
+            start_clock();
+
+            char *foundPattern = find_block(dynamicArray, sumOfPattern);
+
+            //end time measure
+            end_clock(timeFindFunc);
+
+            printf("pattern: %s found pattern: %s\n", pattern, foundPattern);
+            printf("pattern sum: %d found sum: %d\n\n", sumOfPattern, sum_of_block(foundPattern, dynamicArray->sizeOfBlock));
         }
-        else if(strcmp(operations[i],"addremove") == 0)
+        else if (strcmp(operations[i], "addremove") == 0)
         {
-            
+            //start time measure
+            start_clock();
+
+            i++;
+            if (i >= numberOfOperation || strcmp(operations[i], "create") == 0 || strcmp(operations[i], "addremove") == 0 || strcmp(operations[i], "find") == 0)
+            {
+                printf("Invalid argument after find\n");
+                return 0;
+            }
+
+            int numberOfAddRemove = atoi(operations[i]);
+
+            //find(dynamicArray, numberOfAddRemove);
+
+            int *positionsOfAddRemove = malloc(numberOfAddRemove * sizeof(int));
+
+            srand(time(NULL));
+            for (int i = 0; i < numberOfAddRemove; i++)
+            {
+                int r = rand() % dynamicArray->sizeOfArray;
+                positionsOfAddRemove[i] = r;
+            }
+
+            for (int i = 0; i < numberOfAddRemove; i++)
+            {
+                delete_block(dynamicArray, positionsOfAddRemove[i]);
+            }
+
+            for (int i = 0; i < numberOfAddRemove; i++)
+            {
+
+                char *block = calloc(dynamicArray->sizeOfBlock, sizeof(char));
+
+                for (int j = 0; j < dynamicArray->sizeOfBlock; j++)
+                {
+                    int r = rand() % 25 + 97;
+                    block[j] = (char)r;
+                }
+
+                add_block(dynamicArray, positionsOfAddRemove[i], block);
+            }
+
+            //end time measure
+            end_clock(timeAddremoveFunc);
         }
-
-
     }
 
-    
-    print_results(timeCreateFunc);
+    print_results(timeCreateFunc, timeFindFunc, timeAddremoveFunc);
 
     //ArrayOfBlocks* test = create_array_of_blocks(2,3);
 
@@ -88,18 +150,50 @@ int main( int argc, char *argv[])  {
     return 0;
 }
 
-void createArray()
+void create()
 {
+}
 
+void find()
+{
+}
+
+void add_remove_dynamic(ArrayOfBlocks *dynamicArray, int numberOfAddRemove)
+{
+    int *positionsOfAddRemove = malloc(numberOfAddRemove * sizeof(int));
+
+    srand(time(NULL));
+    for (int i = 0; i < numberOfAddRemove; i++)
+    {
+        int r = rand() % dynamicArray->sizeOfArray;
+        positionsOfAddRemove[i] = r;
+    }
+
+    for (int i = 0; i < numberOfAddRemove; i++)
+    {
+        delete_block(dynamicArray, positionsOfAddRemove[i]);
+    }
+
+    for (int i = 0; i < numberOfAddRemove; i++)
+    {
+
+        char *block = calloc(dynamicArray->sizeOfBlock, sizeof(char));
+
+        for (int j = 0; j < dynamicArray->sizeOfBlock; j++)
+        {
+            int r = rand() % 25 + 97;
+            block[j] = (char)r;
+        }
+
+        add_block(dynamicArray, positionsOfAddRemove[i], block);
+    }
 }
 
 void start_clock()
 {
-    printf("st_time: %d \n",st_time);
+    //printf("st_time: %d \n",st_time);
     st_time = times(&st_cpu);
 }
-
-
 
 void end_clock(double *results)
 {
@@ -112,10 +206,12 @@ void end_clock(double *results)
     results[2] = (en_cpu.tms_stime - st_cpu.tms_stime) / clk;
 }
 
-void print_results(double* timeCreateFunc)
+void print_results(double *timeCreateFunc, double *timeFindFunc, double *timeAddremoveFunc)
 {
     printf("Create dynamic table: \n");
-    printf("Real Time: %f, User Time %f, System Time %f \n",timeCreateFunc[0],timeCreateFunc[1],timeCreateFunc[2]);
-
+    printf("Real Time: %f, User Time %f, System Time %f \n", timeCreateFunc[0], timeCreateFunc[1], timeCreateFunc[2]);
+    printf("Find pattern in dynamic table: \n");
+    printf("Real Time: %f, User Time %f, System Time %f \n", timeFindFunc[0], timeFindFunc[1], timeFindFunc[2]);
+    printf("Add and remove blocks operations in dynamic table: \n");
+    printf("Real Time: %f, User Time %f, System Time %f \n", timeAddremoveFunc[0], timeAddremoveFunc[1], timeAddremoveFunc[2]);
 }
-
