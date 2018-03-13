@@ -5,6 +5,7 @@
 #include "dynamicblocks.h"
 #include <stdlib.h>
 #include <math.h>
+#include <limits.h>
 
 ArrayOfBlocks *create_array_of_blocks(int sizeOfArray, int sizeOfBlock)
 {
@@ -34,6 +35,7 @@ ArrayOfBlocks *create_array_of_blocks(int sizeOfArray, int sizeOfBlock)
 
 void delete_array_of_blocks(ArrayOfBlocks *arrayOfBlocks)
 {
+    
     for (int i = 0; i < arrayOfBlocks->sizeOfArray; i++)
     {
         free(arrayOfBlocks->array[i]);
@@ -104,7 +106,9 @@ void add_block_with_random_data(ArrayOfBlocks *arrayOfBlocks, int index)
     {
         int r = rand() % 25 + 97;
         arrayOfBlocks->array[index][j] = (char)r;
+       
     }
+    
 }
 
 void delete_block(ArrayOfBlocks *arrayOfBlocks, int index)
@@ -134,8 +138,7 @@ char *find_block(ArrayOfBlocks *arrayOfBlocks, int sum)
 {
     int tmpSum = 0;
     int indexOfMinDiff = -1;
-    int minDifference = INT16_MAX;
-
+    int minDifference = INT_MAX;
     for (int i = 0; i < arrayOfBlocks->sizeOfArray; i++)
     {
         tmpSum = sum_of_block(arrayOfBlocks->array[i], arrayOfBlocks->sizeOfBlock);
@@ -152,8 +155,10 @@ char *find_block(ArrayOfBlocks *arrayOfBlocks, int sum)
     return arrayOfBlocks->array[indexOfMinDiff];
 }
 
-int sum_of_block(char *block, int size)
+int sum_of_block(char* block, int size)
 {
+    if(block == NULL) return 0;
+
     int sum = 0;
     for (int i = 0; i < size; i++)
     {

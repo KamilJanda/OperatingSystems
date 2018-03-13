@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include "dynamicblocks.h"
+#include "staticcblocks.h"
 
-void test_find();
 
-int main(int argc, char *argv[])
+
+
+int main()
 {
-
+    
     return 0;
 }
-

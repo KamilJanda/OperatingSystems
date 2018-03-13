@@ -35,6 +35,7 @@ ArrayOfBlocks *create_array_of_blocks(int sizeOfArray, int sizeOfBlock)
 
 void delete_array_of_blocks(ArrayOfBlocks *arrayOfBlocks)
 {
+    
     for (int i = 0; i < arrayOfBlocks->sizeOfArray; i++)
     {
         free(arrayOfBlocks->array[i]);

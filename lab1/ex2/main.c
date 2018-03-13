@@ -73,7 +73,9 @@ void parse(int argc, char *argv[])
     }
     else
     {
-
+        process_dynamic(numberOfOperation, operations, arraySize, blockSize);
+        printf("\n\n");
+        process_static(numberOfOperation, operations, arraySize, blockSize);
     }
 
     
@@ -143,7 +145,6 @@ void process_dynamic(int numberOfOperation,char* operations[numberOfOperation],i
             printf("pattern: %s found pattern: %s\n", pattern, foundPattern);
             printf("pattern sum: %d found sum: %d\n\n", sumOfPattern, sum_of_block(foundPattern, dynamicArray->sizeOfBlock));
 
-            free(foundPattern);
         }
         else if (strcmp(operations[i], "addremove") == 0)
         {
@@ -166,6 +167,7 @@ void process_dynamic(int numberOfOperation,char* operations[numberOfOperation],i
         }
     }
 
+    delete_array_of_blocks(dynamicArray);
     print_results(timeCreateFunc, timeFindFunc, timeAddremoveFunc,"dynamic");
 }
 
@@ -227,7 +229,7 @@ void process_static(int numberOfOperation,char* operations[numberOfOperation],in
             //printf("pattern: %s found pattern: %s\n", pattern, foundPattern);
             //printf("pattern sum: %d found sum: %d\n\n", sumOfPattern, sum_of_block(foundPattern, dynamicArray->sizeOfBlock));
 
-            free(foundPattern);
+        
         }
         else if (strcmp(operations[i], "addremove") == 0)
         {
@@ -251,10 +253,9 @@ void process_static(int numberOfOperation,char* operations[numberOfOperation],in
         }
     }
 
+
+    deleteArrayOfBlocksStatic(staticArrayOfBlocks,GLOBAL_ARRAY);
     print_results(timeCreateFunc, timeFindFunc, timeAddremoveFunc,"static");
-
-
-
 }
 
 void create()
@@ -276,8 +277,6 @@ void removeThenAddNewDynamic(ArrayOfBlocks *dynamicArray, int numberOfAddRemove)
     {
         delete_block(dynamicArray, i);
     }
-
-    printf("co xd?\n");
 
     for (int i = 0; i < numberOfAddRemove; i++)
     {
