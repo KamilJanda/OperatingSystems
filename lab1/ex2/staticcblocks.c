@@ -3,36 +3,37 @@
 //
 
 #include "staticcblocks.h"
+#include <stdlib.h>
+#include <math.h>
+#include <limits.h>
 
-StaticstaticArrayOfBlocks *create_array_of_blocks_static(int sizeOfArray, int sizeOfBlock)
+StaticArrayOfBlocks *create_array_of_blocks_static(int sizeOfArray, int sizeOfBlock)
 {
-    StaticstaticArrayOfBlocks staticstaticArrayOfBlocks = malloc(sizeof(StaticstaticArrayOfBlocks));
+    StaticArrayOfBlocks *staticArrayOfBlocks = malloc(sizeof(StaticArrayOfBlocks));
 
-    staticstaticArrayOfBlocks -> sizeOfArray = sizeOfArray;
-    staticstaticArrayOfBlocks -> sizeOfBlock = sizeOfBlock;
-    staticstaticArrayOfBlocks -> blockAvailabilityMap = calloc(sizeOfArray,sizeof(int));
+    staticArrayOfBlocks->sizeOfArray = sizeOfArray;
+    staticArrayOfBlocks->sizeOfBlock = sizeOfBlock;
+    staticArrayOfBlocks->blockAvailabilityMap = calloc(sizeOfArray, sizeof(int));
+
+    return staticArrayOfBlocks;
 }
 
-void delete_array_of_blocks_static(StaticstaticArrayOfBlocks* staticstaticArrayOfBlocks,char array[])
+void deleteArrayOfBlocksStatic(StaticArrayOfBlocks *staticArrayOfBlocks, char array[])
 {
-    int size=(staticstaticArrayOfBlocks -> sizeOfArray)*(staticstaticArrayOfBlocks -> sizeOfBlock);
+    int size = (staticArrayOfBlocks->sizeOfArray) * (staticArrayOfBlocks->sizeOfBlock);
 
-    for(int i=0;i<size;i++)
+    for (int i = 0; i < size; i++)
     {
-        array[i]='';
+        array[i] = ' ';
     }
 
-    free(staticstaticArrayOfBlocks);
+    free(staticArrayOfBlocks);
 }
 
-void add_block_static(StaticstaticArrayOfBlocks *staticstaticArrayOfBlocks, int index, char block[],int blockSize, char array[])
+void add_block_static(StaticArrayOfBlocks *staticArrayOfBlocks, int index, char block[], int blockSize, char array[])
 {
-    if(staticstaticArrayOfBlocks->blockAvailabilityMap[index]==1)
-    {
-        printf("Error: Block with given index is not empty");
-        return;
-    }
-    if (index >= staticstaticArrayOfBlocks->sizeOfArray)
+
+    if (index >= staticArrayOfBlocks->sizeOfArray)
     {
         printf("Error: index is out of range");
         return;
@@ -42,31 +43,42 @@ void add_block_static(StaticstaticArrayOfBlocks *staticstaticArrayOfBlocks, int 
         printf("Error: index cannot be negative number");
         return;
     }
-    if (staticstaticArrayOfBlocks == NULL)
+
+    if (staticArrayOfBlocks->blockAvailabilityMap == NULL)
+        //printf("TUTAJ 3\n");
+
+        //printf("TUTAJ3: %d",staticArrayOfBlocks->blockAvailabilityMap[0]);
+        if (staticArrayOfBlocks->blockAvailabilityMap[index] == 1)
+        {
+            printf("Error: Block with given index is not empty");
+            return;
+        }
+
+    if (staticArrayOfBlocks == NULL)
     {
-        printf("Error:  staticstaticArrayOfBlocks is NULL");
+        printf("Error:  staticArrayOfBlocks is NULL");
         return;
     }
-    if(blockSize != staticstaticArrayOfBlocks->sizeOfBlock)
+    if (blockSize != staticArrayOfBlocks->sizeOfBlock)
     {
         printf("Error: block size is incorrect");
         return;
     }
 
-    staticstaticArrayOfBlocks->blockAvailabilityMap[index]=1
+    staticArrayOfBlocks->blockAvailabilityMap[index] = 1;
 
     int position;
-    for(int i=0;i<staticstaticArrayOfBlocks;i++)
+    for (int i = 0; i < staticArrayOfBlocks->sizeOfBlock; i++)
     {
-        position = (index*staticstaticArrayOfBlocks->sizeOfBlock)+i
-        array[position] = block[i];        
-    }
+        position = (index * (staticArrayOfBlocks->sizeOfBlock)) + i;
 
+        array[position] = block[i];
+    }
 }
 
-void add_block_with_random_data_static(StaticstaticArrayOfBlocks *staticstaticArrayOfBlocks, int index,char array[])
+void addBlockWithRandomDataStatic(StaticArrayOfBlocks *staticArrayOfBlocks, int index, char array[])
 {
-    char* block = calloc(staticArrayOfBlocks->sizeOfBlock,sizeof(char));
+    char *block = (char *)malloc((staticArrayOfBlocks->sizeOfBlock) * sizeof(char));
 
     for (int i = 0; i < staticArrayOfBlocks->sizeOfBlock; i++)
     {
@@ -74,40 +86,38 @@ void add_block_with_random_data_static(StaticstaticArrayOfBlocks *staticstaticAr
         block[i] = (char)r;
     }
 
-    add_block_static(staticstaticArrayOfBlocks,i ndex, block, blockSize, array);
+    add_block_static(staticArrayOfBlocks, index, block, staticArrayOfBlocks->sizeOfBlock, array);
 }
 
-void delete_block_static(StaticstaticArrayOfBlocks *staticstaticArrayOfBlocks, int index, char array[])
+void delete_block_static(StaticArrayOfBlocks *staticArrayOfBlocks, int index, char array[])
 {
-    if (index >= staticstaticArrayOfBlocks->sizeOfArray)
+    if (index >= staticArrayOfBlocks->sizeOfArray)
     {
-        printf("Error: index is out of range");
+        printf("Error from delete_block_static: index is out of range \n");
         return;
     }
     if (index < 0)
     {
-        printf("Error: index cannot be negative number");
+        printf("Error from delete_block_static: index cannot be negative number \n");
         return;
     }
-    if (staticstaticArrayOfBlocks == NULL)
+    if (staticArrayOfBlocks == NULL)
     {
-        printf("Error: array of blocks is NULL");
+        printf("Error from delete_block_static: array of blocks is NULL\n");
         return;
     }
-    
-    staticstaticArrayOfBlocks->blockAvailabilityMap[index]=0
+
+    staticArrayOfBlocks->blockAvailabilityMap[index] = 0;
 
     int position;
-    for(int i=0;i<staticstaticArrayOfBlocks;i++)
+    for (int i = 0; i < staticArrayOfBlocks->sizeOfBlock; i++)
     {
-        position = (index*staticstaticArrayOfBlocks->sizeOfBlock)+i
-        array[position] = '';        
+        position = (index * staticArrayOfBlocks->sizeOfBlock) + i;
+        array[position] = ' ';
     }
-
-
 }
 
-int find_block_static(StaticstaticArrayOfBlocks *staticstaticArrayOfBlocks, int sum, char array[])
+int find_block_static(StaticArrayOfBlocks *staticArrayOfBlocks, int sum, char array[])
 {
     int tmpSum = 0;
     int indexOfMinDiff = -1;
@@ -115,10 +125,10 @@ int find_block_static(StaticstaticArrayOfBlocks *staticstaticArrayOfBlocks, int 
 
     for (int i = 0; i < staticArrayOfBlocks->sizeOfArray; i++)
     {
-        
-        for(int j=0;j<staticstaticArrayOfBlocks->sizeOfBlock;j++)
+
+        for (int j = 0; j < staticArrayOfBlocks->sizeOfBlock; j++)
         {
-            int position = (i*staticstaticArrayOfBlocks->sizeOfBlock)+j;
+            int position = (i * staticArrayOfBlocks->sizeOfBlock) + j;
             tmpSum += array[position];
         }
 
