@@ -15,19 +15,10 @@ ArrayOfBlocks *create_array_of_blocks(int sizeOfArray, int sizeOfBlock)
     newArrayOfBlocks->sizeOfBlock = sizeOfBlock;
     newArrayOfBlocks->array = calloc(sizeOfArray, sizeof(char *));
 
-    //srand(time(NULL));
 
     for (int i = 0; i < sizeOfArray; i++)
     {
-        newArrayOfBlocks->array[i] = NULL; //calloc(sizeOfBlock, sizeof(char));
-
-        /*
-        for (int j = 0; j < newArrayOfBlocks->sizeOfBlock; j++)
-        {
-            int r = rand() % 25 + 97;
-            newArrayOfBlocks->array[i][j] = (char)r;
-        }
-        */
+        newArrayOfBlocks->array[i] = NULL;
     }
 
     return newArrayOfBlocks;

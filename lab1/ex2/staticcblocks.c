@@ -45,9 +45,7 @@ void add_block_static(StaticArrayOfBlocks *staticArrayOfBlocks, int index, char 
     }
 
     if (staticArrayOfBlocks->blockAvailabilityMap == NULL)
-        //printf("TUTAJ 3\n");
-
-        //printf("TUTAJ3: %d",staticArrayOfBlocks->blockAvailabilityMap[0]);
+        
         if (staticArrayOfBlocks->blockAvailabilityMap[index] == 1)
         {
             printf("Error: Block with given index is not empty");
