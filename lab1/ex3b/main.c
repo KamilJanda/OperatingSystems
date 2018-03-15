@@ -4,6 +4,7 @@
 #include <sys/times.h>
 #include <unistd.h>
 #include <dlfcn.h>
+#include <string.h> 
 
 #ifndef DYNAMIC
 #include "dynamicblocks.h"
@@ -204,7 +205,7 @@ void process_dynamic(int numberOfOperation, char *operations[numberOfOperation])
             //start time measure
             start_clock();
 
-            char *foundPattern = find_block(dynamicArray, sumOfPattern);
+            find_block(dynamicArray, sumOfPattern);
 
             //end time measure
             end_clock(timeFindFunc);
@@ -343,7 +344,7 @@ void process_static(int numberOfOperation, char *operations[numberOfOperation])
             //start time measure
             start_clock();
 
-            char *foundPattern = find_block_static(staticArrayOfBlocks, sumOfPattern, GLOBAL_ARRAY);
+            find_block_static(staticArrayOfBlocks, sumOfPattern, GLOBAL_ARRAY);
 
             //end time measure
             end_clock(timeFindFunc);

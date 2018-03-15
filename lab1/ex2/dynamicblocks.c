@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <limits.h>
+#include <stdio.h> 
 
 ArrayOfBlocks *create_array_of_blocks(int sizeOfArray, int sizeOfBlock)
 {

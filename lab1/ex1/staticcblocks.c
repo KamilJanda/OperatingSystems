@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <limits.h>
+#include <stdio.h> 
 
 StaticArrayOfBlocks *create_array_of_blocks_static(int sizeOfArray, int sizeOfBlock)
 {
