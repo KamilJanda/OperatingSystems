@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Os
+CFLAGS = -Wall -Os -std=gnu99
 STATIC_BLOCKS = staticcblocks
 DYNAMIC_BLOCKS = dynamicblocks
 SHARED_LIB_ARG =
