@@ -3,7 +3,9 @@ CFLAGS = -Wall -std=gnu99
 STATIC_BLOCKS = staticcblocks
 DYNAMIC_BLOCKS = dynamicblocks
 
-all: static shared clean
+all: static shared
+
+run: static shared clean
 
 static: assembly_static_lib
 	ar rcs lib$(DYNAMIC_BLOCKS).a $(DYNAMIC_BLOCKS).o
