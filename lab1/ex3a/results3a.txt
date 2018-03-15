@@ -1,102 +1,99 @@
-static link: 
-
+static link: \n
 Create dynamic table: 
 Real Time: 0.020000, User Time 0.010000, System Time 0.000000 
 
 Find pattern in dynamic table: 
-Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
-
-Add and remove blocks operations in dynamic table: 
-Real Time: 0.120000, User Time 0.120000, System Time 0.000000 
-
-Add blocks operations in dynamic table: 
-Real Time: 0.020000, User Time 0.010000, System Time 0.000000 
-
-Remove blocks operations in dynamic table: 
-Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
-
-
-
-Create static table: 
-Real Time: 0.020000, User Time 0.020000, System Time 0.000000 
-
-Find pattern in static table: 
 Real Time: 0.010000, User Time 0.010000, System Time 0.000000 
 
-Add and remove blocks operations in static table: 
-Real Time: 0.230000, User Time 0.210000, System Time 0.010000 
-
-Add blocks operations in static table: 
-Real Time: 0.020000, User Time 0.020000, System Time 0.000000 
-
-Remove blocks operations in static table: 
-Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
-
-shared link: 
-
-Create dynamic table: 
-Real Time: 0.020000, User Time 0.010000, System Time 0.000000 
-
-Find pattern in dynamic table: 
-Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
-
 Add and remove blocks operations in dynamic table: 
-Real Time: 0.120000, User Time 0.120000, System Time 0.000000 
+Real Time: 0.200000, User Time 0.190000, System Time 0.000000 
 
 Add blocks operations in dynamic table: 
-Real Time: 0.010000, User Time 0.010000, System Time 0.000000 
-
-Remove blocks operations in dynamic table: 
-Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
-
-
-
-Create static table: 
-Real Time: 0.020000, User Time 0.020000, System Time 0.000000 
-
-Find pattern in static table: 
-Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
-
-Add and remove blocks operations in static table: 
-Real Time: 0.230000, User Time 0.210000, System Time 0.010000 
-
-Add blocks operations in static table: 
-Real Time: 0.020000, User Time 0.020000, System Time 0.000000 
-
-Remove blocks operations in static table: 
-Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
-
-dynamic link: 
-
-Create dynamic table: 
-Real Time: 0.020000, User Time 0.010000, System Time 0.000000 
-
-Find pattern in dynamic table: 
-Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
-
-Add and remove blocks operations in dynamic table: 
-Real Time: 0.130000, User Time 0.120000, System Time 0.000000 
-
-Add blocks operations in dynamic table: 
-Real Time: 0.010000, User Time 0.010000, System Time 0.000000 
-
-Remove blocks operations in dynamic table: 
-Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
-
-
-
-Create static table: 
-Real Time: 0.020000, User Time 0.020000, System Time 0.000000 
-
-Find pattern in static table: 
-Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
-
-Add and remove blocks operations in static table: 
-Real Time: 0.230000, User Time 0.200000, System Time 0.010000 
-
-Add blocks operations in static table: 
 Real Time: 0.010000, User Time 0.020000, System Time 0.000000 
 
-Remove blocks operations in static table: 
+Remove blocks operations in dynamic table: 
 Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+
+
+Create static table: 
+Real Time: 0.040000, User Time 0.040000, System Time 0.000000 
+
+Find pattern in static table: 
+Real Time: 0.010000, User Time 0.010000, System Time 0.000000 
+
+Add and remove blocks operations in static table: 
+Real Time: 0.430000, User Time 0.400000, System Time 0.020000 
+
+Add blocks operations in static table: 
+Real Time: 0.030000, User Time 0.030000, System Time 0.010000 
+
+Remove blocks operations in static table: 
+Real Time: 0.010000, User Time 0.010000, System Time 0.000000 
+
+shared link: \n
+Create dynamic table: 
+Real Time: 0.020000, User Time 0.010000, System Time 0.000000 
+
+Find pattern in dynamic table: 
+Real Time: 0.010000, User Time 0.010000, System Time 0.000000 
+
+Add and remove blocks operations in dynamic table: 
+Real Time: 0.210000, User Time 0.210000, System Time 0.000000 
+
+Add blocks operations in dynamic table: 
+Real Time: 0.020000, User Time 0.020000, System Time 0.000000 
+
+Remove blocks operations in dynamic table: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+
+
+Create static table: 
+Real Time: 0.030000, User Time 0.030000, System Time 0.000000 
+
+Find pattern in static table: 
+Real Time: 0.010000, User Time 0.010000, System Time 0.000000 
+
+Add and remove blocks operations in static table: 
+Real Time: 0.430000, User Time 0.400000, System Time 0.020000 
+
+Add blocks operations in static table: 
+Real Time: 0.030000, User Time 0.030000, System Time 0.000000 
+
+Remove blocks operations in static table: 
+Real Time: 0.010000, User Time 0.020000, System Time 0.000000 
+
+dynamic link: \n
+Create dynamic table: 
+Real Time: 0.020000, User Time 0.020000, System Time 0.000000 
+
+Find pattern in dynamic table: 
+Real Time: 0.010000, User Time 0.010000, System Time 0.000000 
+
+Add and remove blocks operations in dynamic table: 
+Real Time: 0.190000, User Time 0.190000, System Time 0.000000 
+
+Add blocks operations in dynamic table: 
+Real Time: 0.030000, User Time 0.020000, System Time 0.000000 
+
+Remove blocks operations in dynamic table: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+
+
+Create static table: 
+Real Time: 0.030000, User Time 0.040000, System Time 0.000000 
+
+Find pattern in static table: 
+Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
+
+Add and remove blocks operations in static table: 
+Real Time: 0.420000, User Time 0.410000, System Time 0.020000 
+
+Add blocks operations in static table: 
+Real Time: 0.030000, User Time 0.030000, System Time 0.010000 
+
+Remove blocks operations in static table: 
+Real Time: 0.020000, User Time 0.010000, System Time 0.000000 
 

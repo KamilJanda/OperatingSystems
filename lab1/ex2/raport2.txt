@@ -1,0 +1,32 @@
+Create dynamic table: 
+Real Time: 0.020000, User Time 0.010000, System Time 0.000000 
+
+Find pattern in dynamic table: 
+Real Time: 0.010000, User Time 0.010000, System Time 0.000000 
+
+Add and remove blocks operations in dynamic table: 
+Real Time: 0.020000, User Time 0.020000, System Time 0.000000 
+
+Add blocks operations in dynamic table: 
+Real Time: 0.020000, User Time 0.020000, System Time 0.000000 
+
+Remove blocks operations in dynamic table: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+
+
+Create static table: 
+Real Time: 0.030000, User Time 0.030000, System Time 0.000000 
+
+Find pattern in static table: 
+Real Time: 0.010000, User Time 0.010000, System Time 0.000000 
+
+Add and remove blocks operations in static table: 
+Real Time: 0.040000, User Time 0.040000, System Time 0.000000 
+
+Add blocks operations in static table: 
+Real Time: 0.030000, User Time 0.030000, System Time 0.000000 
+
+Remove blocks operations in static table: 
+Real Time: 0.010000, User Time 0.010000, System Time 0.010000 
+
