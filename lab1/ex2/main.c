@@ -12,15 +12,15 @@ void parse(int argc, char *argv[]);
 void process_dynamic(int numberOfOperation, char *operations[numberOfOperation]);
 void process_static(int numberOfOperation, char *operations[numberOfOperation]);
 void removeAndAddInEveryIterationDynamic(ArrayOfBlocks *dynamicArray, int numberOfAddRemove);
-void removeAndAddInEveryIterationStatic(StaticArrayOfBlocks *staticArrayOfBlocks, int numberOfAddRemove);
+void removeAndAddInEveryIterationStatic(StaticArrayOfBlocks *staticArrayOfBlocks, int numberOfAddRemove,char mainArray[]);
 void start_clock(void);
 void end_clock(double *results);
 void print_results(double *timeCreateFunc, double *timeFindFunc, double *timeAddremoveFunc, double *timeAddFunc, double *timeRemoveFunc, char *type);
 int validateCommandArgument(int i, int numberOfOperation, char* operation);
 
-const static long long maxSize = 1000000;
+const static long long MAX_SIZE = 1000000;
 
-char GLOBAL_ARRAY[maxSize];
+
 
 //variables used to measure duration of operations
 static clock_t st_time;
@@ -217,6 +217,8 @@ void process_dynamic(int numberOfOperation, char *operations[numberOfOperation])
 void process_static(int numberOfOperation, char *operations[numberOfOperation])
 {
     StaticArrayOfBlocks *staticArrayOfBlocks = NULL;
+    char mainArray[MAX_SIZE];
+
 
     int arraySize = 0;
     int blockSize = 0;
@@ -250,7 +252,7 @@ void process_static(int numberOfOperation, char *operations[numberOfOperation])
 
             for (int i = 0; i < staticArrayOfBlocks->sizeOfArray; i++)
             {
-                addBlockWithRandomDataStatic(staticArrayOfBlocks, i, GLOBAL_ARRAY);
+                addBlockWithRandomDataStatic(staticArrayOfBlocks, i, mainArray);
             }
 
             //end time measure
@@ -272,7 +274,7 @@ void process_static(int numberOfOperation, char *operations[numberOfOperation])
             //start time measure
             start_clock();
 
-            find_block_static(staticArrayOfBlocks, sumOfPattern, GLOBAL_ARRAY);
+            find_block_static(staticArrayOfBlocks, sumOfPattern, mainArray);
 
             //end time measure
             end_clock(timeFindFunc);
@@ -294,7 +296,7 @@ void process_static(int numberOfOperation, char *operations[numberOfOperation])
             //start time measure
             start_clock();
 
-            removeAndAddInEveryIterationStatic(staticArrayOfBlocks, numberOfAddRemove);
+            removeAndAddInEveryIterationStatic(staticArrayOfBlocks, numberOfAddRemove,mainArray);
 
             //end time measure
             end_clock(timeAddremoveFunc);
@@ -317,7 +319,7 @@ void process_static(int numberOfOperation, char *operations[numberOfOperation])
 
             for (int i = 0; i < numberOfAdd; i++)
             {
-                addBlockWithRandomDataStatic(staticArrayOfBlocks, i, GLOBAL_ARRAY);
+                addBlockWithRandomDataStatic(staticArrayOfBlocks, i, mainArray);
             }
 
             //end time measure
@@ -341,7 +343,7 @@ void process_static(int numberOfOperation, char *operations[numberOfOperation])
 
             for (int i = 0; i < numberOfRemove; i++)
             {
-                delete_block_static(staticArrayOfBlocks, i, GLOBAL_ARRAY);
+                delete_block_static(staticArrayOfBlocks, i, mainArray);
             }
 
             //end time measure
@@ -349,7 +351,7 @@ void process_static(int numberOfOperation, char *operations[numberOfOperation])
         }
     }
 
-    deleteArrayOfBlocksStatic(staticArrayOfBlocks, GLOBAL_ARRAY);
+    deleteArrayOfBlocksStatic(staticArrayOfBlocks, mainArray);
     print_results(timeCreateFunc, timeFindFunc, timeAddremoveFunc, timeAddFunc, timeRemoveFunc, "static");
 }
 
@@ -390,7 +392,7 @@ void removeAndAddInEveryIterationDynamic(ArrayOfBlocks *dynamicArray, int number
     }
 }
 
-void removeAndAddInEveryIterationStatic(StaticArrayOfBlocks *staticArrayOfBlocks, int numberOfAddRemove)
+void removeAndAddInEveryIterationStatic(StaticArrayOfBlocks *staticArrayOfBlocks, int numberOfAddRemove,char mainArray[])
 {
 
     int *positionsOfAddRemove = malloc(numberOfAddRemove * sizeof(int));
@@ -404,9 +406,9 @@ void removeAndAddInEveryIterationStatic(StaticArrayOfBlocks *staticArrayOfBlocks
 
     for (int i = 0; i < numberOfAddRemove; i++)
     {
-        delete_block_static(staticArrayOfBlocks, positionsOfAddRemove[i], GLOBAL_ARRAY);
+        delete_block_static(staticArrayOfBlocks, positionsOfAddRemove[i], mainArray);
 
-        addBlockWithRandomDataStatic(staticArrayOfBlocks, positionsOfAddRemove[i], GLOBAL_ARRAY);
+        addBlockWithRandomDataStatic(staticArrayOfBlocks, positionsOfAddRemove[i], mainArray);
     }
 }
 

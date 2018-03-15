@@ -9,6 +9,8 @@ ifeq ($(UNAME), Linux)
 endif
 
 all: static shared dynamic
+
+run: static shared dynamic
 	echo $(CFLAGS) >> results3b.txt
 	echo "static link: \n" >> results3b.txt
 	./main_static b create 1000 1000 find abc addremove 10000 remove 1000 add 1000 | tee -a results3b.txt
