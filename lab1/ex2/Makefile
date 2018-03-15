@@ -4,8 +4,10 @@ STATIC_BLOCKS = staticcblocks
 DYNAMIC_BLOCKS = dynamicblocks
 
 all: static main.o 
-	$(CC) $(CFLAGS) main.o lib$(DYNAMIC_BLOCKS).a lib$(STATIC_BLOCKS).a \
-	-o main
+	$(CC) $(CFLAGS) main.o lib$(DYNAMIC_BLOCKS).a lib$(STATIC_BLOCKS).a -o main
+
+run: all
+	./main b create 1000 1000 find abc addremove 1000 remove 1000 add 1000 | tee raport2.txt
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c main.c -o main.o

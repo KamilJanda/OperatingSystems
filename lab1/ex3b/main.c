@@ -210,8 +210,7 @@ void process_dynamic(int numberOfOperation, char *operations[numberOfOperation])
             //end time measure
             end_clock(timeFindFunc);
 
-            //printf("pattern: %s found pattern: %s\n", pattern, foundPattern);
-            //printf("pattern sum: %d found sum: %d\n\n", sumOfPattern, sum_of_block(foundPattern, dynamicArray->sizeOfBlock));
+
         }
         else if (strcmp(operations[i], "addremove") == 0)
         {
@@ -349,9 +348,6 @@ void process_static(int numberOfOperation, char *operations[numberOfOperation])
 
             //end time measure
             end_clock(timeFindFunc);
-
-            //printf("pattern: %s found pattern: %s\n", pattern, foundPattern);
-            //printf("pattern sum: %d found sum: %d\n\n", sumOfPattern, sum_of_block(foundPattern, dynamicArray->sizeOfBlock));
         }
         else if (strcmp(operations[i], "addremove") == 0)
         {
