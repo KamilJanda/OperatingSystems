@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall
+CFLAGS = -Wall -Os
 STATIC_BLOCKS = staticcblocks
 DYNAMIC_BLOCKS = dynamicblocks
 SHARED_LIB_ARG =
@@ -9,13 +9,13 @@ ifeq ($(UNAME), Linux)
 endif
 
 all: static shared dynamic
-	echo $(UNAME)
-	echo "static link: \n" > results3a.txt
-	./main_static b create 1000 1000 find abc addremove 10000 remove 1000 add 1000 | tee -a results3a.txt
-	echo "shared link: \n" >> results3a.txt
-	./main_shared b create 1000 1000 find abc addremove 10000 remove 1000 add 1000 | tee -a results3a.txt
-	echo "dynamic link: \n" >> results3a.txt
-	./main_dynamic b create 1000 1000 find abc addremove 10000 remove 1000 add 1000 | tee -a results3a.txt
+	echo $(CFLAGS) >> results3b.txt
+	echo "static link: \n" >> results3b.txt
+	./main_static b create 1000 1000 find abc addremove 10000 remove 1000 add 1000 | tee -a results3b.txt
+	echo "shared link: \n" >> results3b.txt
+	./main_shared b create 1000 1000 find abc addremove 10000 remove 1000 add 1000 | tee -a results3b.txt
+	echo "dynamic link: \n" >> results3b.txt
+	./main_dynamic b create 1000 1000 find abc addremove 10000 remove 1000 add 1000 | tee -a results3b.txt
 	make clean
 
 
