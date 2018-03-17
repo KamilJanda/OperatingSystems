@@ -1,3 +1,8 @@
+Zastosowanie optymalizacji powoduje przyspieszenie wykonywania programu w stosunku
+do braku optymalizacji, najlepsze rezultaty daje zastosowanie optymalizacji -O2
+
+
+
 -Wall -O0 -std=gnu99
 static link: \n
 Create dynamic table: 

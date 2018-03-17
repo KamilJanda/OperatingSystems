@@ -1,3 +1,6 @@
+Program wykonuje sie najszybciej przy uzyciu bibliotek ladowanych dynamicznie
+
+
 static link: \n
 Create dynamic table: 
 Real Time: 0.020000, User Time 0.010000, System Time 0.000000 
@@ -96,4 +99,6 @@ Real Time: 0.030000, User Time 0.030000, System Time 0.010000
 
 Remove blocks operations in static table: 
 Real Time: 0.020000, User Time 0.010000, System Time 0.000000 
+
+
 
