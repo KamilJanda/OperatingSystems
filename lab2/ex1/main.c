@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include "fileoperations.h"
 
 void parser(int argc, char *argv[]);
 int check_nuber_of_arguments(char *operation, int numberOfArguments);
@@ -13,7 +16,7 @@ int main(int argc, char *argv[])
 
 void parser(int argc, char *argv[])
 {
-    char generate[] = "generate";
+    char generateSymbol[] = "generate";
     char copy[] = "copy";
     char sort[] = "sort";
 
@@ -21,23 +24,27 @@ void parser(int argc, char *argv[])
     if(argc<2)
     {
         printf("Exception: Too few arguments \n");
-        return;
+        exit(1);
     }
 
     char *operation = argv[1];
 
-    if (!((strcmp(operation,generate)==0)||(strcmp(operation,copy)==0)||(strcmp(sort,sort)==0)))
+    if (!((strcmp(operation,generateSymbol)==0)||(strcmp(operation,copy)==0)||(strcmp(sort,sort)==0)))
     {
         printf("Exception: Unknown operation \n");
-        return;
+        exit(1);
     }
 
 
 
-    if(strcmp(argv[1],generate) == 0 && check_nuber_of_arguments(operation,argc) == 0)
+    if(strcmp(argv[1],generateSymbol) == 0 && check_nuber_of_arguments(operation,argc) == 0)
     {
-        
+        FileData fileData;
+        fileData.fileName = argv[2];
+        fileData.numberOfRecords = atoi(argv[3]);
+        fileData.sizeOfRecord = atoi(argv[4]);
 
+        generate(fileData);
 
     }
     else if (strcmp(argv[1],sort)==0 && check_nuber_of_arguments(operation,argc) == 0)
@@ -47,7 +54,24 @@ void parser(int argc, char *argv[])
     }
     else if (strcmp(argv[1],copy)==0 && check_nuber_of_arguments(operation,argc) == 0)
     {
+        FileData* fileDataOrginal = create_file_data(argv[2],atoi(argv[4]),atoi(argv[5]));
+        FileData* fileDataCopy = create_file_data(argv[3],atoi(argv[4]),atoi(argv[5]));
 
+        int numberOfRecordToCopy = atoi(argv[4]);
+
+        if(strcmp(argv[6],"sys")==0)
+        {
+            copy_sys(fileDataOrginal,fileDataCopy,numberOfRecordToCopy);
+        }
+        else if(strcmp(argv[6],"lib")==0)
+        {
+            
+        }
+        else
+        {
+            printf("Exception: Invalid last argument");
+            exit(1);
+        }
     }
 
 
@@ -63,17 +87,17 @@ int check_nuber_of_arguments(char *operation, int numberOfArguments)
 
     char message[] = "Exception: invalid number of arguments after:";
 
-    if(numberOfArguments != numberOfArgForGnereate)
+    if((strcmp(operation,"generateSymbol")==0)&&(numberOfArguments != numberOfArgForGnereate))
     {
         printf("%s %s \n",message,operation);
         return 1;
     }
-    else if(numberOfArguments != numberOfArgForSort)
+    else if((strcmp(operation,"sort")==0)&&(numberOfArguments != numberOfArgForSort))
     {
         printf("%s %s \n",message,operation);
         return 1;
     }
-    else if(numberOfArguments != numberOfArgForCopy)
+    else if((strcmp(operation,"copy")==0)&&(numberOfArguments != numberOfArgForCopy))
     {
         printf("%s %s \n",message,operation);
         return 1;
@@ -83,3 +107,4 @@ int check_nuber_of_arguments(char *operation, int numberOfArguments)
         return 0;
     }
 }
+
