@@ -1,0 +1,135 @@
+record: 1000 size: 4
+Create times: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+Sort sys times: 
+Real Time: 0.980000, User Time 0.220000, System Time 0.740000 
+
+Sort lib times: 
+Real Time: 1.100000, User Time 0.440000, System Time 0.620000 
+
+Copy sys times: 
+Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
+
+Copy lib times: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+-----------------------------------------------------------------------------
+record: 2000 size: 4
+Create times: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+Sort sys times: 
+Real Time: 3.910000, User Time 0.870000, System Time 3.000000 
+
+Sort lib times: 
+Real Time: 4.400000, User Time 1.760000, System Time 2.610000 
+
+Copy sys times: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+Copy lib times: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+-----------------------------------------------------------------------------
+record: 1000 size: 512
+Create times: 
+Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
+
+Sort sys times: 
+Real Time: 1.100000, User Time 0.240000, System Time 0.830000 
+
+Sort lib times: 
+Real Time: 1.370000, User Time 0.510000, System Time 0.820000 
+
+Copy sys times: 
+Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
+
+Copy lib times: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+-----------------------------------------------------------------------------
+record: 2000 size: 512
+Create times: 
+Real Time: 0.030000, User Time 0.010000, System Time 0.000000 
+
+Sort sys times: 
+Real Time: 5.260000, User Time 1.050000, System Time 3.800000 
+
+Sort lib times: 
+Real Time: 5.160000, User Time 1.960000, System Time 3.110000 
+
+Copy sys times: 
+Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
+
+Copy lib times: 
+Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
+
+-----------------------------------------------------------------------------
+record: 1000 size: 4096
+Create times: 
+Real Time: 0.080000, User Time 0.040000, System Time 0.010000 
+
+Sort sys times: 
+Real Time: 2.970000, User Time 0.470000, System Time 1.800000 
+
+Sort lib times: 
+Real Time: 2.960000, User Time 0.810000, System Time 1.770000 
+
+Copy sys times: 
+Real Time: 0.020000, User Time 0.000000, System Time 0.010000 
+
+Copy lib times: 
+Real Time: 0.030000, User Time 0.000000, System Time 0.000000 
+
+-----------------------------------------------------------------------------
+record: 2000 size: 4096
+Create times: 
+Real Time: 0.130000, User Time 0.090000, System Time 0.020000 
+
+Sort sys times: 
+Real Time: 20.880000, User Time 2.340000, System Time 8.860000 
+
+Sort lib times: 
+Real Time: 22.420000, User Time 4.020000, System Time 8.960000 
+
+Copy sys times: 
+Real Time: 0.070000, User Time 0.000000, System Time 0.030000 
+
+Copy lib times: 
+Real Time: 0.040000, User Time 0.000000, System Time 0.010000 
+
+-----------------------------------------------------------------------------
+record: 1000 size: 8192
+Create times: 
+Real Time: 0.120000, User Time 0.100000, System Time 0.010000 
+
+Sort sys times: 
+Real Time: 8.730000, User Time 0.810000, System Time 3.280000 
+
+Sort lib times: 
+Real Time: 10.450000, User Time 1.330000, System Time 3.820000 
+
+Copy sys times: 
+Real Time: 0.030000, User Time 0.000000, System Time 0.010000 
+
+Copy lib times: 
+Real Time: 0.030000, User Time 0.000000, System Time 0.010000 
+
+-----------------------------------------------------------------------------
+record: 2000 size: 8192
+Create times: 
+Real Time: 0.290000, User Time 0.210000, System Time 0.040000 
+
+Sort sys times: 
+Real Time: 82.150000, User Time 3.870000, System Time 16.520000 
+
+Sort lib times: 
+Real Time: 82.110000, User Time 6.800000, System Time 19.400000 
+
+Copy sys times: 
+Real Time: 0.100000, User Time 0.000000, System Time 0.030000 
+
+Copy lib times: 
+Real Time: 0.470000, User Time 0.000000, System Time 0.030000 
+
