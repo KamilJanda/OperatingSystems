@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -93,9 +94,9 @@ void sort_lib(FileData *fileData)
     {
         j=i;
 
-        if(fread(buff1,sizeof(char),fileData->sizeOfRecord,fptr)<0) printf("error buff1 \n");
+        if(fread(buff1,sizeof(char),fileData->sizeOfRecord,fptr) == 0) printf("error buff1 \n");
 
-        if(fread(buff2,sizeof(char),fileData->sizeOfRecord,fptr)<0) printf("error buff2 \n");
+        if(fread(buff2,sizeof(char),fileData->sizeOfRecord,fptr) == 0) printf("error buff2 \n");
 
         //count number of step back in order to restore correct position in file after loop
         int numberOfMoveBackInFile = 0;

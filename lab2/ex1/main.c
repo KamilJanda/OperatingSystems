@@ -91,7 +91,6 @@ void parser(int argc, char *argv[])
     {
         FileData* fileData = create_file_data(argv[2],atoi(argv[3]),atoi(argv[4]));
 
-        int numberOfRecordToCopy = atoi(argv[3]);
 
         if(strcmp(argv[5],"sys")==0)
         {

@@ -66,7 +66,7 @@ char* make_path(char* path,char* fileName)
     return resultPath;
 }
 
-char* absolute_path(char* path)
+char* absolute_path(const char* path)
 {
     char *result = malloc(4096);
     realpath(path, result);
@@ -147,10 +147,10 @@ void find_files_nftw(char* path,time_t date,int (*compare)(time_t, time_t))
     nftw(path, &display_info, nopenfd, flags);
 }
 
-
-
-void parser(int argc, char *argv[]);
-
+void print_help()
+{
+    printf("Example call: ./main file_name [<,=,>] YYYY-MM-DD HH-MM-SS (optional)nftw");
+}
 
 
 void parser(int argc, char *argv[])
@@ -158,6 +158,7 @@ void parser(int argc, char *argv[])
     if(argc<5)
     {
         printf("Exception: Too few arguments \n");
+        print_help();
         exit(1);
     }
 
