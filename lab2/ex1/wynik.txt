@@ -3,10 +3,10 @@ Create times:
 Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
 
 Sort sys times: 
-Real Time: 1.080000, User Time 0.230000, System Time 0.810000 
+Real Time: 0.790000, User Time 0.080000, System Time 0.700000 
 
 Sort lib times: 
-Real Time: 1.230000, User Time 0.500000, System Time 0.690000 
+Real Time: 0.890000, User Time 0.170000, System Time 0.710000 
 
 Copy sys times: 
 Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
@@ -20,10 +20,10 @@ Create times:
 Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
 
 Sort sys times: 
-Real Time: 4.360000, User Time 0.950000, System Time 3.330000 
+Real Time: 3.280000, User Time 0.400000, System Time 2.870000 
 
 Sort lib times: 
-Real Time: 4.950000, User Time 1.980000, System Time 2.910000 
+Real Time: 3.450000, User Time 0.750000, System Time 2.690000 
 
 Copy sys times: 
 Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
@@ -37,10 +37,10 @@ Create times:
 Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
 
 Sort sys times: 
-Real Time: 1.290000, User Time 0.240000, System Time 0.890000 
+Real Time: 1.240000, User Time 0.130000, System Time 1.100000 
 
 Sort lib times: 
-Real Time: 1.380000, User Time 0.510000, System Time 0.830000 
+Real Time: 1.510000, User Time 0.260000, System Time 1.240000 
 
 Copy sys times: 
 Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
@@ -54,13 +54,13 @@ Create times:
 Real Time: 0.020000, User Time 0.010000, System Time 0.000000 
 
 Sort sys times: 
-Real Time: 5.260000, User Time 1.070000, System Time 3.850000 
+Real Time: 5.140000, User Time 0.500000, System Time 4.620000 
 
 Sort lib times: 
-Real Time: 5.270000, User Time 1.970000, System Time 3.140000 
+Real Time: 6.240000, User Time 1.090000, System Time 5.140000 
 
 Copy sys times: 
-Real Time: 0.010000, User Time 0.000000, System Time 0.010000 
+Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
 
 Copy lib times: 
 Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
@@ -68,50 +68,50 @@ Real Time: 0.000000, User Time 0.000000, System Time 0.000000
 -----------------------------------------------------------------------------
 record: 1000 size: 4096
 Create times: 
-Real Time: 0.100000, User Time 0.050000, System Time 0.020000 
+Real Time: 0.080000, User Time 0.060000, System Time 0.010000 
 
 Sort sys times: 
-Real Time: 3.500000, User Time 0.500000, System Time 1.950000 
+Real Time: 2.420000, User Time 0.360000, System Time 2.050000 
 
 Sort lib times: 
-Real Time: 3.170000, User Time 0.880000, System Time 1.920000 
+Real Time: 2.740000, User Time 0.540000, System Time 2.190000 
 
 Copy sys times: 
-Real Time: 0.010000, User Time 0.000000, System Time 0.010000 
+Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
 
 Copy lib times: 
-Real Time: 0.010000, User Time 0.000000, System Time 0.010000 
+Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
 
 -----------------------------------------------------------------------------
 record: 2000 size: 4096
 Create times: 
-Real Time: 0.120000, User Time 0.090000, System Time 0.010000 
+Real Time: 0.150000, User Time 0.110000, System Time 0.030000 
 
 Sort sys times: 
-Real Time: 30.260000, User Time 2.410000, System Time 9.340000 
+Real Time: 10.080000, User Time 1.510000, System Time 8.560000 
 
 Sort lib times: 
-Real Time: 27.350000, User Time 4.090000, System Time 9.130000 
+Real Time: 10.870000, User Time 2.330000, System Time 8.520000 
 
 Copy sys times: 
-Real Time: 0.070000, User Time 0.000000, System Time 0.020000 
+Real Time: 0.010000, User Time 0.000000, System Time 0.010000 
 
 Copy lib times: 
-Real Time: 0.060000, User Time 0.000000, System Time 0.010000 
+Real Time: 0.010000, User Time 0.000000, System Time 0.010000 
 
 -----------------------------------------------------------------------------
 record: 1000 size: 8192
 Create times: 
-Real Time: 0.140000, User Time 0.100000, System Time 0.020000 
+Real Time: 0.160000, User Time 0.100000, System Time 0.040000 
 
 Sort sys times: 
-Real Time: 14.010000, User Time 0.850000, System Time 3.530000 
+Real Time: 4.190000, User Time 0.580000, System Time 3.600000 
 
 Sort lib times: 
-Real Time: 11.570000, User Time 1.390000, System Time 3.980000 
+Real Time: 5.120000, User Time 0.830000, System Time 4.280000 
 
 Copy sys times: 
-Real Time: 0.050000, User Time 0.000000, System Time 0.020000 
+Real Time: 0.010000, User Time 0.000000, System Time 0.010000 
 
 Copy lib times: 
 Real Time: 0.020000, User Time 0.000000, System Time 0.010000 
@@ -119,17 +119,17 @@ Real Time: 0.020000, User Time 0.000000, System Time 0.010000
 -----------------------------------------------------------------------------
 record: 2000 size: 8192
 Create times: 
-Real Time: 0.300000, User Time 0.230000, System Time 0.030000 
+Real Time: 0.320000, User Time 0.280000, System Time 0.030000 
 
 Sort sys times: 
-Real Time: 61.900000, User Time 4.020000, System Time 16.320000 
+Real Time: 17.600000, User Time 2.550000, System Time 15.040000 
 
 Sort lib times: 
-Real Time: 65.220000, User Time 6.500000, System Time 18.310000 
+Real Time: 20.960000, User Time 3.560000, System Time 17.390000 
 
 Copy sys times: 
-Real Time: 0.110000, User Time 0.000000, System Time 0.040000 
+Real Time: 0.030000, User Time 0.000000, System Time 0.020000 
 
 Copy lib times: 
-Real Time: 0.130000, User Time 0.000000, System Time 0.030000 
+Real Time: 0.020000, User Time 0.000000, System Time 0.020000 
 
