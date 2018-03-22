@@ -1,0 +1,2 @@
+Funckcje systemowe osiągaja znacznie lepsze czasy w przypadku sortowania,
+jednak podczas kopiowania lepsze wyniki osiagaja funkcje biblioteczne
