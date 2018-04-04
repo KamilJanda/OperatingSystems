@@ -3,8 +3,9 @@ CFLAGS = -Wall -std=gnu99
 PROG_NAME = main
 LINE = echo "-----------------------------------------------------------------------------" >> wynik.txt
 TIME_TEST = time_test
+MEMORY_TEST = memory_test
 
-all: main.o time_test
+all: main.o time_test memory_test
 	$(CC) $(CFLAGS) main.o -o main
 	
 
@@ -13,7 +14,11 @@ main.o: main.c
 
 time_test: $(TIME_TEST).c
 	$(CC) $(CFLAGS) -c $(TIME_TEST).c -o $(TIME_TEST).o
-	$(CC) $(CFLAGS) $(TIME_TEST).c -o $(TIME_TEST).o
+	$(CC) $(CFLAGS) $(TIME_TEST).c -o $(TIME_TEST)
+
+memory_test: $(MEMORY_TEST).c
+	$(CC) $(CFLAGS) -c $(MEMORY_TEST).c -o $(MEMORY_TEST).o
+	$(CC) $(CFLAGS) $(MEMORY_TEST).c -o $(MEMORY_TEST)
 
 .PHONY: clean
 

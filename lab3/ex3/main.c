@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 
 #define errExit(msg) do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
@@ -50,19 +52,34 @@ void run_task(char *arg[])
     }
 }
 
-void set_limits(int time,int memory)
+void set_limits(int time, int memory)
 {
     struct rlimit timeLimit;
     struct rlimit memoryLimit;
 
-    timeLimit.rlim_cur = timeLimit.rlim_cur = (rlim_t)time;
-    memoryLimit.rlim_cur = memoryLimit.rlim_cur = (rlim_t) (memory * 1024 * 1024);
+    timeLimit.rlim_cur = (rlim_t)time;
+    timeLimit.rlim_max = (rlim_t)time;
+
+    memoryLimit.rlim_cur = (rlim_t) (memory * 1024 * 1024);
+    memoryLimit.rlim_max = (rlim_t) (memory * 1024 * 1024);
 
     if (setrlimit(RLIMIT_CPU, &timeLimit) == -1)
         errExit("Fail to set time limit");
 
-    if (setrlimit(RLIMIT_AS, &timeLimit) == -1)
+    if (setrlimit(RLIMIT_AS, &memoryLimit) == -1)
         errExit("Fail to set memory limit");
+}
+
+void print_usage(char* name,struct rusage after,struct rusage before)
+{
+    time_t userTimeSec = after.ru_utime.tv_sec - before.ru_utime.tv_sec;
+    time_t userTimeUsec = after.ru_utime.tv_usec - before.ru_utime.tv_usec;
+
+    time_t systemTimeSec = after.ru_stime.tv_sec - before.ru_stime.tv_sec;
+    time_t systemTimeUsec = after.ru_stime.tv_usec - before.ru_stime.tv_usec;
+    
+    printf("Execution of '%s' user time: %ld,%ld s system time: %ld,%ld s \n\n",
+           name, userTimeSec,userTimeUsec, systemTimeSec,systemTimeUsec);
 }
 
 void process_file_with_limits(char *fileName,int time,int memory)
@@ -82,13 +99,16 @@ void process_file_with_limits(char *fileName,int time,int memory)
     char **args = NULL;
     while (getline(&line, &length, fp) != -1)
     {
+        struct rusage before,after; //new for ex3
+
         add_return(line);
         args = split(line, " ");
 
-        pid_t pid = fork();
+        getrusage(RUSAGE_CHILDREN, &before); //new for ex3
 
-        //new for ex3
-        set_limits(time,memory);
+        pid_t pid = fork();
+        
+        set_limits(time,memory); //new for ex3
 
         if (pid == 0)
         {
@@ -110,6 +130,9 @@ void process_file_with_limits(char *fileName,int time,int memory)
             printf("ERROR: pid < 0");
             exit(EXIT_FAILURE);
         }
+
+        getrusage(RUSAGE_CHILDREN, &after); //new for ex3
+        print_usage(args[0],after,before); // new for ex3
 
         free(args);
     }
