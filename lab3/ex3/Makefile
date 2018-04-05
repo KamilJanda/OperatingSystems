@@ -10,7 +10,7 @@ MEM_LIMIT =  10
 
 .PHONY: clean test
 
-all: clean main.o time_test memory_test
+all: main.o time_test memory_test
 	$(CC) $(CFLAGS) main.o -o main
 	
 

@@ -77,19 +77,9 @@ void set_limits(int time, int memory)
 
 void print_usage(char *name, struct rusage after, struct rusage before)
 {
-
-    //time_t userTimeSec = after.ru_utime.tv_sec - before.ru_utime.tv_sec;
-    //time_t userTimeUsec = after.ru_utime.tv_usec - before.ru_utime.tv_usec;
-
     time_t userTime =
         ((after.ru_utime.tv_sec * 1000000) + after.ru_utime.tv_usec) -
         ((before.ru_utime.tv_sec * 1000000) + before.ru_utime.tv_usec);
-
-    //printf("s after: %ld s before: %ld \n", after.ru_utime.tv_sec, before.ru_utime.tv_sec);
-    //printf("us after: %ld us before: %ld \n", after.ru_utime.tv_usec, before.ru_utime.tv_usec);
-
-    //time_t systemTimeSec = after.ru_stime.tv_sec - before.ru_stime.tv_sec;
-    //time_t systemTimeUsec = after.ru_stime.tv_usec - before.ru_stime.tv_usec;
 
     time_t systemTime =
         ((after.ru_stime.tv_sec * 1000000) + after.ru_stime.tv_usec) -
@@ -131,13 +121,6 @@ void process_file_with_limits(char *fileName, int time, int memory)
 
             set_limits(time, memory); //new for ex3
 
-            /*
-            struct rlimit rl;
-            printf("       CUR          MAX \n");
-            getrlimit(RLIMIT_CPU, &rl);
-            printf("CPU    %llu         %llu \n", rl.rlim_cur, rl.rlim_max);
-            */
-  
             run_task(args);
             exit(EXIT_SUCCESS);
         }
