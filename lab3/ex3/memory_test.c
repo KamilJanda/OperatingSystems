@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void message()
+{
+    printf("hi \n");
+}
 
 int main(int argc, char *argv[])
 {   
@@ -11,6 +15,8 @@ int main(int argc, char *argv[])
         test = NULL;
         test = calloc(10000,sizeof(char*));
     }
+
+    //atexit(message);
 
     return 0;
 }

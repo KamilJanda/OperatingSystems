@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int fib(int n) {
+    if(n<=1) return 1;
+    return fib(n-1)+fib(n-2);
+}
 
 int main(int argc, char *argv[])
 {
-    int x;
-    while(1)
-    {
-        x = 1;
-    }
+    fib(1000);
     
     return 0;
 }

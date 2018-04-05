@@ -9,7 +9,12 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
-#define errExit(msg) do { perror(msg); exit(EXIT_FAILURE); } while (0)
+#define errExit(msg)        \
+    do                      \
+    {                       \
+        perror(msg);        \
+        exit(EXIT_FAILURE); \
+    } while (0)
 
 void add_return(char *line)
 {
@@ -47,7 +52,7 @@ void run_task(char *arg[])
 {
     if (execvp(arg[0], arg) < 0)
     {
-        printf("Error execvp: fail to run %s\n",arg[0]);
+        printf("Error execvp: fail to run %s\n", arg[0]);
         exit(EXIT_FAILURE);
     }
 }
@@ -60,8 +65,8 @@ void set_limits(int time, int memory)
     timeLimit.rlim_cur = (rlim_t)time;
     timeLimit.rlim_max = (rlim_t)time;
 
-    memoryLimit.rlim_cur = (rlim_t) (memory * 1024 * 1024);
-    memoryLimit.rlim_max = (rlim_t) (memory * 1024 * 1024);
+    memoryLimit.rlim_cur = (rlim_t)(memory * 1024 * 1024);
+    memoryLimit.rlim_max = (rlim_t)(memory * 1024 * 1024);
 
     if (setrlimit(RLIMIT_CPU, &timeLimit) == -1)
         errExit("Fail to set time limit");
@@ -70,19 +75,31 @@ void set_limits(int time, int memory)
         errExit("Fail to set memory limit");
 }
 
-void print_usage(char* name,struct rusage after,struct rusage before)
+void print_usage(char *name, struct rusage after, struct rusage before)
 {
-    time_t userTimeSec = after.ru_utime.tv_sec - before.ru_utime.tv_sec;
-    time_t userTimeUsec = after.ru_utime.tv_usec - before.ru_utime.tv_usec;
 
-    time_t systemTimeSec = after.ru_stime.tv_sec - before.ru_stime.tv_sec;
-    time_t systemTimeUsec = after.ru_stime.tv_usec - before.ru_stime.tv_usec;
-    
-    printf("Execution of '%s' user time: %ld,%ld s system time: %ld,%ld s \n\n",
-           name, userTimeSec,userTimeUsec, systemTimeSec,systemTimeUsec);
+    //time_t userTimeSec = after.ru_utime.tv_sec - before.ru_utime.tv_sec;
+    //time_t userTimeUsec = after.ru_utime.tv_usec - before.ru_utime.tv_usec;
+
+    time_t userTime =
+        ((after.ru_utime.tv_sec * 1000000) + after.ru_utime.tv_usec) -
+        ((before.ru_utime.tv_sec * 1000000) + before.ru_utime.tv_usec);
+
+    //printf("s after: %ld s before: %ld \n", after.ru_utime.tv_sec, before.ru_utime.tv_sec);
+    //printf("us after: %ld us before: %ld \n", after.ru_utime.tv_usec, before.ru_utime.tv_usec);
+
+    //time_t systemTimeSec = after.ru_stime.tv_sec - before.ru_stime.tv_sec;
+    //time_t systemTimeUsec = after.ru_stime.tv_usec - before.ru_stime.tv_usec;
+
+    time_t systemTime =
+        ((after.ru_stime.tv_sec * 1000000) + after.ru_stime.tv_usec) -
+        ((before.ru_stime.tv_sec * 1000000) + before.ru_stime.tv_usec);
+
+    printf("Execution of '%s' user time: %ld us system time: %ld us \n\n",
+           name, userTime, systemTime);
 }
 
-void process_file_with_limits(char *fileName,int time,int memory)
+void process_file_with_limits(char *fileName, int time, int memory)
 {
     FILE *fp;
     char *line = NULL;
@@ -94,12 +111,13 @@ void process_file_with_limits(char *fileName,int time,int memory)
         printf("Error: cannot open file \n");
         exit(EXIT_FAILURE);
     }
-        
 
     char **args = NULL;
+
     while (getline(&line, &length, fp) != -1)
     {
-        struct rusage before,after; //new for ex3
+        struct rusage before; //new for ex3
+        struct rusage after;
 
         add_return(line);
         args = split(line, " ");
@@ -107,11 +125,19 @@ void process_file_with_limits(char *fileName,int time,int memory)
         getrusage(RUSAGE_CHILDREN, &before); //new for ex3
 
         pid_t pid = fork();
-        
-        set_limits(time,memory); //new for ex3
 
         if (pid == 0)
         {
+
+            set_limits(time, memory); //new for ex3
+
+            /*
+            struct rlimit rl;
+            printf("       CUR          MAX \n");
+            getrlimit(RLIMIT_CPU, &rl);
+            printf("CPU    %llu         %llu \n", rl.rlim_cur, rl.rlim_max);
+            */
+  
             run_task(args);
             exit(EXIT_SUCCESS);
         }
@@ -119,9 +145,10 @@ void process_file_with_limits(char *fileName,int time,int memory)
         {
             int status;
             waitpid(pid, &status, 0);
-            if (WIFEXITED(status) && WEXITSTATUS(status) !=0)
+
+            if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
             {
-                printf("Failed of: %s",args[0]);
+                printf("Failed of: %s", args[0]);
                 exit(EXIT_FAILURE);
             }
         }
@@ -131,8 +158,8 @@ void process_file_with_limits(char *fileName,int time,int memory)
             exit(EXIT_FAILURE);
         }
 
-        getrusage(RUSAGE_CHILDREN, &after); //new for ex3
-        print_usage(args[0],after,before); // new for ex3
+        getrusage(RUSAGE_CHILDREN, &after);  //new for ex3
+        print_usage(args[0], after, before); // new for ex3
 
         free(args);
     }
@@ -170,7 +197,7 @@ int main(int argc, char *argv[])
     int time = atoi(argv[2]);
     int memory = atoi(argv[3]);
 
-    process_file_with_limits(argv[1],time,memory);
+    process_file_with_limits(argv[1], time, memory);
 
     return 0;
 }

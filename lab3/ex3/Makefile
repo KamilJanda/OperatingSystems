@@ -5,7 +5,12 @@ LINE = echo "-------------------------------------------------------------------
 TIME_TEST = time_test
 MEMORY_TEST = memory_test
 
-all: main.o time_test memory_test
+TIME_LIMIT = 2
+MEM_LIMIT =  10
+
+.PHONY: clean test
+
+all: clean main.o time_test memory_test
 	$(CC) $(CFLAGS) main.o -o main
 	
 
@@ -20,7 +25,9 @@ memory_test: $(MEMORY_TEST).c
 	$(CC) $(CFLAGS) -c $(MEMORY_TEST).c -o $(MEMORY_TEST).o
 	$(CC) $(CFLAGS) $(MEMORY_TEST).c -o $(MEMORY_TEST)
 
-.PHONY: clean
+test: 
+	./main test $(TIME_LIMIT) $(MEM_LIMIT)
+
 
 clean:
 	rm -f *.o
