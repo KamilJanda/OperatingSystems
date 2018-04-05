@@ -127,25 +127,24 @@ void find_files(char* rootName, char* pathFromRoot,time_t date,int (*compare)(ti
             if(compare(date,buf -> st_mtime))
             {
                 
-                printf("-------------------------------------------------------------\n");
+                
                 printf("%s %lld bytes %s %s\n",
                         absolute_path(path),
                         (long long) buf->st_size, 
                         make_permisions(buf->st_mode),
                         ctime(&(buf->st_mtime)));
 
-                printf("Parent pid:%d\n", (int)getppid());
-                printf("Current pid:%d\n", (int)getpid());
-                printf("-------------------------------------------------------------\n");
+                //printf("Parent pid:%d\n", (int)getppid());
+                //printf("Current pid:%d\n", (int)getpid());
+                //printf("-------------------------------------------------------------\n");
             }
         }
 
-        //FREE(path);
-        //FREE(currentFileName);
+        
     }
     
 
-    //FREE(buf);
+    
     closedir(dir);
 }
 

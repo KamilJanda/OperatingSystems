@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 void add_return(char *line)
 {
@@ -13,23 +17,24 @@ void add_return(char *line)
 char **split(char *str, const char *regex)
 {
     char **res = NULL;
-    char *p = strtok(str, regex);
+    char *record = strtok(str, regex);
     int n_spaces = 0;
 
-    /* split string and append tokens to 'res' */
-    while (p)
+    while (record)
     {
         res = realloc(res, sizeof(char *) * ++n_spaces);
 
         if (res == NULL)
-            exit(-1); /* memory allocation failed */
+        {
+            printf("memory allocation failed \n");
+            exit(EXIT_FAILURE);
+        }
 
-        res[n_spaces - 1] = p;
+        res[n_spaces - 1] = record;
 
-        p = strtok(0, regex);
+        record = strtok(0, regex);
     }
 
-    /* realloc one extra element for the last NULL */
     res = realloc(res, sizeof(char *) * (n_spaces + 1));
     res[n_spaces] = 0;
 
@@ -40,7 +45,7 @@ void run_task(char *arg[])
 {
     if (execvp(arg[0], arg) < 0)
     {
-        printf("ERROR: fail to run execvp\n");
+        printf("Error execvp: fail to run %s\n",arg[0]);
         exit(EXIT_FAILURE);
     }
 }
@@ -53,7 +58,11 @@ void process_file(char *fileName)
 
     fp = fopen(fileName, "r");
     if (fp == NULL)
+    {
+        printf("Error: cannot open file \n");
         exit(EXIT_FAILURE);
+    }
+        
 
     char **args = NULL;
     while (getline(&line, &length, fp) != -1)
@@ -72,8 +81,9 @@ void process_file(char *fileName)
         {
             int status;
             waitpid(pid, &status, 0);
-            if (WEXITSTATUS(status))
+            if (WIFEXITED(status) && WEXITSTATUS(status) !=0)
             {
+                printf("Failed of: %s",args[0]);
                 exit(EXIT_FAILURE);
             }
         }
