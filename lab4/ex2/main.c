@@ -89,7 +89,7 @@ void child_action() {
     unsigned int sleepTime =(unsigned int) rand() % 11;
     sleep(sleepTime);
 
-    #if SHOW_TYPE == ALL or SHOW_TYPE == SHORT
+    #if SHOW_TYPE == ALL || SHOW_TYPE == SHORT
     printf("Send signal SIGUSR1 from: %d after sleep for: %d\n",getpid(),sleepTime);
     #endif
     kill(getppid(), SIGUSR1);
@@ -129,7 +129,7 @@ void handle_SIGUSR1(int signum, siginfo_t *siginfo, void *context) {
         return;
 
     requests++;
-    #if SHOW_TYPE == ALL or SHOW_TYPE == SHORT
+    #if SHOW_TYPE == ALL || SHOW_TYPE == SHORT
     printf("Received request (signal: %i) from: %i \n", signum ,siginfo->si_pid);
     #endif
 
@@ -146,7 +146,7 @@ void handle_SIGUSR1(int signum, siginfo_t *siginfo, void *context) {
 
         for (int i = 0; i < bufferSize; i++) {
             kill(permisionRequests[i], SIGUSR1);
-            #if SHOW_TYPE == ALL or SHOW_TYPE == SHOR
+            #if SHOW_TYPE == ALL || SHOW_TYPE == SHOR
             printf("Send permision to use real time sig to pid: %d \n", permisionRequests[i]);
             #endif
         }
@@ -159,7 +159,7 @@ void handle_SIGRT(int signum, siginfo_t *siginfo, void *context) {
     if (getpid() != parentPid)
         return;
 
-    #if SHOW_TYPE == ALL or SHOW_TYPE == SHOR
+    #if SHOW_TYPE == ALL || SHOW_TYPE == SHOR
     printf("receive real time signal: %d from: %d \n", signum, siginfo->si_pid);
     #endif
 
@@ -176,7 +176,7 @@ void handle_SIGCHLD(int signum, siginfo_t *siginfo, void *context) {
 
     childrenAlive--;
 
-    #if SHOW_TYPE == ALL or SHOW_TYPE == SHOR
+    #if SHOW_TYPE == ALL || SHOW_TYPE == SHOR
     printf("EXIT child pid: %d with status: %d\n",siginfo->si_pid,siginfo->si_status);
     #endif
 }
