@@ -83,7 +83,7 @@ void parse(int argc, char *argv[]) {
 
 void child_action() {
 
-    unsigned int sleepTime =(unsigned int) (rand() * rand()) % 10;
+    unsigned int sleepTime =(unsigned int) 3;//rand() % 11;
     sleep(sleepTime);
 
     printf("Send signal SIGUSR1 from: %d after sleep for: %d\n",getpid(),sleepTime);
