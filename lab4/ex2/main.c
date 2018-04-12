@@ -9,12 +9,12 @@
 #include <signal.h>
 
 
-
 #define SIGINT 2
 #ifdef __linux__
 #define SIGSTP 20
 #else
 #define SIGSTP 18 // According to `man 3 signal` on MacOS
+#endif
 
 
 
