@@ -283,7 +283,7 @@ void kill_children()
             if (SHOW_EXIT || SHOW_ALL)
                 printf("Terminate child pid: %d \n", children[i]);
 
-            kill(children[i], SIGINT);
+            kill(children[i], SIGKILL);
             childrenAlive--;
         }
     }
