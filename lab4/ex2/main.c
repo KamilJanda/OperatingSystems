@@ -8,11 +8,7 @@
 #include <string.h>
 #include <signal.h>
 
-//to remove
-#ifndef __linux__
-#define SIGRTMIN 1
-#define SIGRTMAX 8
-#endif
+
 
 #define SIGINT 2
 #ifdef __linux__
@@ -24,7 +20,7 @@
 #define ALL 1
 #define SHORT 0
 
-int SHOW_TYPE = SHORT;
+int SHOW_TYPE = ALL;
 
 int N, K;
 
@@ -62,7 +58,6 @@ int main(int argc, char *argv[]) {
     parse(argc, argv);
     parentPid = getpid();
 
-    //set_mask();
     set_handlers();
 
     create_children(N);
@@ -208,14 +203,7 @@ void kill_children()
             kill(children[i],SIGINT);
             childrenAlive--;
         }
-    }
-}
-
-
-void set_mask() {
-    sigset_t signals;
-    sigemptyset(&signals);
-    sigaddset(&signals, SIGUSR1);
+    } 
 }
 
 void set_handlers() {

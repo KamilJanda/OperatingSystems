@@ -1,2 +1,3 @@
 ls -l
 ps -l
+ls -l /Users/kamil/Documents/AGH/sysops/OperatingSystems/lab3/ex1/test/dir

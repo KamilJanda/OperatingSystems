@@ -9,7 +9,7 @@
 #ifdef __linux__
 #define SIGSTP 20
 #else
-#define SIGSTP 18 // According to `man 3 signal` on MacOS
+#define SIGSTP 18 // for OSx
 #endif
 
 int isPaused = 0;
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 
     sigaction(SIGTSTP, &act, NULL);
 
-    signal(SIGTSTP, handler_SIGTSTP);
+    signal(SIGINT, handler_SIGINT);
 
     while (1)
     {
@@ -53,13 +53,11 @@ void handler_SIGTSTP(int signum)
         isPaused = 1;
         printf("\nOczekuję na CTRL+Z - kontynuacja albo CTR+C - zakonczenie programu\n");
     }
-    signal(SIGTSTP, handler_SIGTSTP);
 }
 
 void handler_SIGINT(int signum)
 {
     printf("\nOdebrano sygnał SIGINT\n");
-    signal(SIGINT, SIG_DFL);
     exit(EXIT_SUCCESS);
 }
 

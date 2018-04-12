@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 
     sigaction(SIGTSTP, &act, NULL);
 
-    signal(SIGTSTP, handler_SIGTSTP);
+    signal(SIGINT, handler_SIGINT);
 
     create_child();
 
@@ -54,14 +54,12 @@ void handler_SIGTSTP(int signum)
     {
         create_child();
     }
-    signal(SIGTSTP, handler_SIGTSTP);
 }
 
 void handler_SIGINT(int signum)
 {
     printf("\nOdebrano sygnał SIGINT\n");
     if(isChildAlive) kill(childPid,SIGKILL);
-    signal(SIGINT, SIG_DFL);
     exit(EXIT_SUCCESS);
 }
 

@@ -12,12 +12,6 @@
 #define SIGSTP 18 // According to `man 3 signal` on MacOS
 #endif
 
-//only for OS x
-#ifndef __linux__
-#define SIGRTMIN 1
-#define SIGRTMAX 8
-#endif
-
 int parentPid;
 int PARENT_COUNT = 0;
 int CHILD_COUNT = 0;
