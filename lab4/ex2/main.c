@@ -15,10 +15,7 @@
 #define SIGSTP 18 // According to `man 3 signal` on MacOS
 #endif
 
-#ifndef __linux__
-#define SIGRTMIN 1
-#define SIGRTMAX 8
-#endif
+
 
 int N, K;
 
