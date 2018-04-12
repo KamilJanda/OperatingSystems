@@ -33,8 +33,8 @@ void handler_SIGINT(int signum, siginfo_t *siginfo, void *context);
 void set_handlers_parent();
 void set_handlers_children();
 
-void handler_SIGRT_parent(int signum, siginfo_t *siginfo, void *context);
-void handler_SIGRT_child(int signum, siginfo_t *siginfo, void *context);
+void handler_SIGRTMAX_parent(int signum, siginfo_t *siginfo, void *context);
+void handler_SIGRTMAX_child(int signum, siginfo_t *siginfo, void *context);
 
 void send_signal(int type, pid_t pid);
 
@@ -88,10 +88,15 @@ void create_child(int numberOfSignalToSend, int type)
         {
             send_signal(type, pid);
         }
-        //if (type == 1)
-        
-        kill(pid, SIGUSR2);
-        
+
+        if (type == 3)
+        {
+            kill(pid, SIGRTMIN);
+        }
+        else
+        {
+            kill(pid, SIGUSR2);
+        }
     }
     else if (pid < 0)
     {
@@ -121,22 +126,28 @@ void handler_SIGUSR2_child(int signum, siginfo_t *siginfo, void *context)
 void handler_SIGINT(int signum, siginfo_t *siginfo, void *context)
 {
     printf("Received SIGINT \n");
-    
 }
 
-void handler_SIGRT_parent(int signum, siginfo_t *siginfo, void *context)
+void handler_SIGRTMAX_parent(int signum, siginfo_t *siginfo, void *context)
 {
     //printf("received SIGUSR1 from child\n");
     PARENT_COUNT++;
 }
 
-void handler_SIGRT_child(int signum, siginfo_t *siginfo, void *context)
+void handler_SIGRTMAX_child(int signum, siginfo_t *siginfo, void *context)
 {
     //printf("received SIGUSR1 from parent\n");
     CHILD_COUNT++;
     kill(getppid(), SIGRTMAX);
 }
 
+//handler for exit child
+void handler_SIGRTMIN_child(int signum, siginfo_t *siginfo, void *context)
+{
+    printf("Received SIGRTMIN \n");
+    printf("Signals received from parent: %d\n", CHILD_COUNT);
+    exit(EXIT_SUCCESS);
+}
 
 void set_handlers_parent()
 {
@@ -147,7 +158,7 @@ void set_handlers_parent()
     act.sa_sigaction = &handler_SIGUSR1_parent;
     sigaction(SIGUSR1, &act, NULL);
 
-    act.sa_sigaction = &handler_SIGRT_parent;
+    act.sa_sigaction = &handler_SIGRTMAX_parent;
     sigaction(SIGRTMAX, &act, NULL);
 }
 
@@ -163,8 +174,11 @@ void set_handlers_children()
     act.sa_sigaction = &handler_SIGUSR2_child;
     sigaction(SIGUSR2, &act, NULL);
 
-    act.sa_sigaction = &handler_SIGRT_child;
+    act.sa_sigaction = &handler_SIGRTMAX_child;
     sigaction(SIGRTMAX, &act, NULL);
+
+    act.sa_sigaction = &handler_SIGRTMIN_child;
+    sigaction(SIGRTMIN, &act, NULL);
 }
 
 void send_signal(int type, pid_t pid)
@@ -176,7 +190,7 @@ void send_signal(int type, pid_t pid)
         SENT_SIGNALS++;
         break;
     case 2:
-        kill(pid,SIGUSR1);
+        kill(pid, SIGUSR1);
         SENT_SIGNALS++;
         pause();
         break;

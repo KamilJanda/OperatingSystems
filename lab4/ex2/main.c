@@ -86,16 +86,15 @@ void child_action() {
     unsigned int sleepTime =(unsigned int) (rand() * rand()) % 10;
     sleep(sleepTime);
 
-    printf("Send signal SIGUSR1(%d) from: %d after sleep for: %d\n",SIGUSR1 ,getpid(),sleepTime);
+    printf("Send signal SIGUSR1 from: %d after sleep for: %d\n",getpid(),sleepTime);
     kill(getppid(), SIGUSR1);
 
     pause();
 
     int realTimeSignal = SIGRTMIN + (rand() % (SIGRTMAX - SIGRTMIN));
-    union sigval sigValue;
-    sigValue.sival_int = sleepTime;
+    //union sigval sigValue;
+    //sigValue.sival_int = sleepTime;
 
-    //sigqueue(getppid(), realTimeSignal, sigValue);
     kill(getppid(), realTimeSignal);
 
     exit(sleepTime);
@@ -184,7 +183,7 @@ void kill_children()
     {
         if(children[i] != 0)
         {
-            printf("Terminate child pid: %d",children[i]);
+            printf("Terminate child pid: %d \n",children[i]);
             kill(children[i],SIGINT);
             childrenAlive--;
         }
