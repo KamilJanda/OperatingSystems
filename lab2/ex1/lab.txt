@@ -1,0 +1,19 @@
+record: 100 size: 20
+Create times: 
+Real Time: 0.010000, User Time 0.000000, System Time 0.000000 
+
+Copy lib times: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+Copy lib times: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+Copy lib times: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+Sort sys times: 
+Real Time: 0.000000, User Time 0.000000, System Time 0.000000 
+
+Sort sys times: 
+Real Time: 0.020000, User Time 0.000000, System Time 0.010000 
+
