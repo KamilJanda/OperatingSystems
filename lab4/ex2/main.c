@@ -21,6 +21,11 @@
 #define SIGSTP 18 // According to `man 3 signal` on MacOS
 #endif
 
+#define ALL 1
+#define SHORT 0
+
+int SHOW_TYPE = SHORT;
+
 int N, K;
 
 pid_t parentPid;
@@ -57,13 +62,16 @@ int main(int argc, char *argv[]) {
     parse(argc, argv);
     parentPid = getpid();
 
-    set_mask();
+    //set_mask();
     set_handlers();
 
     create_children(N);
 
     while (childrenAlive > 0){ }
+
+    #if SHOW_TYPE == ALL
     printf("Number of children: %i\n",childrenAlive);
+    #endif
 
     return 0;
 }
@@ -83,18 +91,18 @@ void parse(int argc, char *argv[]) {
 
 void child_action() {
 
-    unsigned int sleepTime =(unsigned int) 3;//rand() % 11;
+    unsigned int sleepTime =(unsigned int) rand() % 11;
     sleep(sleepTime);
 
+    #if SHOW_TYPE == ALL || SHOW_TYPE == SHORT
     printf("Send signal SIGUSR1 from: %d after sleep for: %d\n",getpid(),sleepTime);
+    #endif
     kill(getppid(), SIGUSR1);
 
     pause();
 
     int realTimeSignal = SIGRTMIN + (rand() % (SIGRTMAX - SIGRTMIN));
-    //union sigval sigValue;
-    //sigValue.sival_int = sleepTime;
-
+    
     kill(getppid(), realTimeSignal);
 
     exit(sleepTime);
@@ -111,7 +119,9 @@ void create_children(int numberOfChilderen) {
             child_action();
         } else if (pid > 0) {
             children[i] = pid;
+            #if SHOW_TYPE == ALL
             printf("Created child with PID %i\n", pid);
+            #endif
         } else if (pid < 0) {
             printf("ERROR: pid < 0");
             exit(EXIT_FAILURE);
@@ -124,20 +134,26 @@ void handle_SIGUSR1(int signum, siginfo_t *siginfo, void *context) {
         return;
 
     requests++;
+    #if SHOW_TYPE == ALL || SHOW_TYPE == SHORT
     printf("Received request (signal: %i) from: %i \n", signum ,siginfo->si_pid);
+    #endif
 
     if (requests < K) {
         permisionRequests[bufferSize] = siginfo->si_pid;
         bufferSize++;
     } else if (requests == K) {
+        #if SHOW_TYPE == ALL
         printf("---------------- requests == K ----------------\n");
+        #endif
 
         permisionRequests[bufferSize] = siginfo->si_pid;
         bufferSize++;
 
         for (int i = 0; i < bufferSize; i++) {
             kill(permisionRequests[i], SIGUSR1);
+            #if SHOW_TYPE == ALL || SHOW_TYPE == SHOR
             printf("Send permision to use real time sig to pid: %d \n", permisionRequests[i]);
+            #endif
         }
     } else {
         kill(siginfo->si_pid, SIGUSR1);
@@ -148,7 +164,9 @@ void handle_SIGRT(int signum, siginfo_t *siginfo, void *context) {
     if (getpid() != parentPid)
         return;
 
+    #if SHOW_TYPE == ALL || SHOW_TYPE == SHOR
     printf("receive real time signal: %d from: %d \n", signum, siginfo->si_pid);
+    #endif
 
 }
 
@@ -163,8 +181,9 @@ void handle_SIGCHLD(int signum, siginfo_t *siginfo, void *context) {
 
     childrenAlive--;
 
+    #if SHOW_TYPE == ALL || SHOW_TYPE == SHOR
     printf("EXIT child pid: %d with status: %d\n",siginfo->si_pid,siginfo->si_status);
-
+    #endif
 }
 
 void handle_SIGINT(int signum, siginfo_t *siginfo, void *context)
@@ -183,7 +202,9 @@ void kill_children()
     {
         if(children[i] != 0)
         {
+            #if SHOW_TYPE == ALL
             printf("Terminate child pid: %d \n",children[i]);
+            #endif
             kill(children[i],SIGINT);
             childrenAlive--;
         }
