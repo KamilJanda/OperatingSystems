@@ -1,0 +1,2 @@
+ls -l |ps -la
+ls -la
