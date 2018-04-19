@@ -34,15 +34,19 @@ int main(int argc, char *argv[])
     size_t len = 0;
     ssize_t nread;
 
-    FILE *fifo = fopen(path, "r");
-    if (fifo == NULL)
+    while (1)
     {
-        perror("Master: Fail to open FIFO\n");
-        exit(EXIT_FAILURE);
-    }
-    while ((nread = getline(&line, &len, fifo)) != -1)
-    {
-        printf("%s\n", line);
+
+        FILE *fifo = fopen(path, "r");
+        if (fifo == NULL)
+        {
+            perror("Master: Fail to open FIFO\n");
+            exit(EXIT_FAILURE);
+        }
+        while ((nread = getline(&line, &len, fifo)) != -1)
+        {
+            printf("%s\n", line);
+        }
     }
 
     return 0;
