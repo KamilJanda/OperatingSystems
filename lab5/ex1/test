@@ -1,6 +1,4 @@
 cat /etc/passwd | tail -10 | sort | head -5
 
 date
-ls -al
-ls -al | grep temp | wc -c
-date
+ls -al | head -2
