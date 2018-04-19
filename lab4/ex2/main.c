@@ -8,6 +8,12 @@
 #include <string.h>
 #include <signal.h>
 
+
+#ifndef __linux__
+#define SIGRTMIN 1
+#define SIGRTMAX 8
+#endif
+
 #define SIGINT 2
 #ifdef __linux__
 #define SIGSTP 20
