@@ -83,8 +83,6 @@ void process_file(char *fileName)
             pipefd[i] = calloc(2, sizeof(int));
         }
 
-        
-
         for (int i = 0; i < numberOfCommands; i++)
         {
 
@@ -101,7 +99,6 @@ void process_file(char *fileName)
 
             if (pid == 0)
             {
-                printf("proces: %d number: %d",pid,i);
                 if (i != numberOfCommands - 1)
                 {
                     close(pipefd[i][READ_END]);
@@ -136,6 +133,7 @@ void process_file(char *fileName)
                     exit(EXIT_FAILURE);
                 }
             }
+            
             else if (pid < 0)
             {
                 printf("ERROR: pid < 0");
