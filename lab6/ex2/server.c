@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
     struct mq_attr current_state;
 
-    QUEUE_ID = mq_open(path, O_RDONLY | O_CREAT, 0666, NULL);)
+    QUEUE_ID = mq_open(path, O_RDONLY | O_CREAT, 0666, NULL);
 
     struct msgBuf message;
     int sizeOfmessage = sizeof(struct msgBuf);
