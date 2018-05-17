@@ -237,7 +237,7 @@ void call_action(char *line)
     strcpy(temp, line);
     char *actionStr = strtok(temp, " ");
 
-    char *message[MAX_TEXT_SIZE];
+    char message[MAX_TEXT_SIZE];
 
     char *text = strchr(line, ' ');
     if (text != NULL)
