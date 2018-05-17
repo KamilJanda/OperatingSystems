@@ -14,7 +14,7 @@
 #include "communication.h"
 
 mqd_t PRIVATE_QUEUE;
-mqd_t SERVER_QUEUE;
+mqd_t SERVER_QUEUE = -1;
 int CLIENT_ID;
 
 char path[10];
@@ -54,6 +54,8 @@ int main(int argc, char *argv[])
 
     //SERVER_QUEUE = create_queue(home, PROJECT_ID);
     SERVER_QUEUE = mq_open(path, O_WRONLY);
+    if(SERVER_QUEUE == -1)
+        perror("Fail to open queue \n");
 
     //int privateKey = ftok(home, getpid());
 
