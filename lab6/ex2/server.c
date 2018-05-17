@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     posix_attr.mq_maxmsg = MAX_MESSAGE_QUEUE_SIZE;
     posix_attr.mq_msgsize = sizeof(struct msgBuf);
 
-    QUEUE_ID = mq_open(path, O_RDONLY | O_CREAT, 0666, &posix_attr);
+    QUEUE_ID = mq_open(serverPath, O_RDONLY | O_CREAT, 0666, &posix_attr);
 
     struct msgBuf message;
     int sizeOfmessage = sizeof(struct msgBuf);

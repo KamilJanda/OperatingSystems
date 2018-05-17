@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     //char *home = getenv("HOME");
 
     //SERVER_QUEUE = create_queue(home, PROJECT_ID);
-    SERVER_QUEUE = mq_open(path, O_WRONLY);
+    SERVER_QUEUE = mq_open(serverPath, O_WRONLY);
     if(SERVER_QUEUE == -1)
         perror("Fail to open queue \n");
 
