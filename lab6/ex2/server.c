@@ -213,6 +213,8 @@ void register_action(struct msgBuf *message)
 
     printf("before send \n");
     send_message(clients[client_id].clientQueueDesc, REGISTER, text);
+
+    printf("after send \n");
 }
 
 void quit_action(struct msgBuf *message)
@@ -315,6 +317,7 @@ void send_message(mqd_t mqdes, int type, char *text)
 
     if (mq_send(mqdes,(char*) sendBack, sizeOfMessage, 1) == -1)
         ferror("Server: request failed\n");
+
 
 }
 
