@@ -23,7 +23,7 @@ struct mq_attr posix_attr;
 
 void handler_SIGINT(int signo);
 int create_queue(char *path, int ID);
-void register_client(char* key);
+void register_client(int key);
 void mirror_request(char *text);
 struct msgBuf *receive_message();
 
