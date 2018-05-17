@@ -44,7 +44,9 @@ int main(int argc, char *argv[])
 
     atexit(close_queue);
 
-    sprintf(path, "/%d", getpid());
+    pid_t pid = getpid();
+
+    sprintf(path, "/%d", pid);
 
     
     posix_attr.mq_maxmsg = MAX_MESSAGE_QUEUE_SIZE;
@@ -147,7 +149,7 @@ void register_client(int key)
 
     printf("xd4 \n");
 
-    int client_id;
+   
 
     printf("Registered client with key: %s \n", receivedMessage->text);
 
