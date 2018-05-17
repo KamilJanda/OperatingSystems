@@ -130,7 +130,7 @@ void register_client(int key)
 
     
 
-    sprintf(message->text, "/%d", key);
+    sprintf(message->text, "%d", key);
 
     printf("xd1 \n");
 

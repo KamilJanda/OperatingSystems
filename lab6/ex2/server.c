@@ -281,7 +281,7 @@ int register_client(int client_key, pid_t pid)
     if (client_id == -1)
         perror("Server: Cannot regiter more clients \n");
 
-    int client_queue = msgget(client_key, 0);
+    int client_queue = mq_receive(client_key, 0);
     clients[client_id].clientQueueDesc = client_queue;
     clients[client_id].pid = pid;
 
