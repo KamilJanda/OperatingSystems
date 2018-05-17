@@ -305,10 +305,7 @@ void send_message(mqd_t mqdes, int type, char *text)
     sendBack->mtype = type;
     sendBack->pid = getpid();
 
-   
-
     strcpy(sendBack->text, text);
-
 
     if (mq_send(mqdes,(char*) sendBack, sizeOfMessage, 1) == -1)
         ferror("Server: request failed\n");

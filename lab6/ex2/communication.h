@@ -4,7 +4,7 @@
 #include <sys/types.h>
 
 #define PROJECT_ID 1
-#define MAX_TEXT_SIZE 1024
+#define MAX_TEXT_SIZE 9
 #define MAX_CLIENTS 10
 #define MAX_MESSAGE_QUEUE_SIZE 9
 

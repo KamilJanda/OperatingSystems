@@ -143,7 +143,7 @@ void register_client(int key)
 
     printf("xd3 \n");
 
-    if (mq_receive(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, &posix_attr) == -1)
+    if (mq_receive(PRIVATE_QUEUE,(char*) receivedMessage, sizeOfMessage, &posix_attr) == -1)
         ferror("Client: catching LOGIN response failed\n");
 
     printf("xd4 \n");
@@ -210,7 +210,7 @@ void send_message(int queueDesc, int type, char *text)
     if (text != NULL)
         strcpy(sendBack->text, text);
 
-    if (mq_send(queueDesc, sendBack, sizeOfMessage, 1) == -1)
+    if (mq_send(queueDesc,(char*) sendBack, sizeOfMessage, 1) == -1)
         ferror("Client: REGISTER request failed\n");
 }
 
@@ -219,7 +219,7 @@ struct msgBuf *receive_message()
     int sizeOfMessage = sizeof(struct msgBuf);
     struct msgBuf *receivedMessage = malloc(sizeOfMessage);
 
-    if (mq_receive(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, &posix_attr) == -1)
+    if (mq_receive(PRIVATE_QUEUE,(char*) receivedMessage, sizeOfMessage, &posix_attr) == -1)
         ferror("Client: catching LOGIN response failed\n");
 
     return receivedMessage;
