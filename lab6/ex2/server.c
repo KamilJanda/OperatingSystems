@@ -71,6 +71,8 @@ int main(int argc, char *argv[])
 
     while (1)
     {
+        printf("tutaj 0 \n");
+
         if (IS_SERVER_ON == 0)
         {
 
@@ -81,7 +83,7 @@ int main(int argc, char *argv[])
                 break;
         }
 
-        printf("Tutaj \n");
+        printf("Tutaj 1\n");
 
         if (mq_receive(QUEUE_ID,(char*) &message, sizeOfmessage, &posix_attr) == -1)
         {
@@ -89,6 +91,8 @@ int main(int argc, char *argv[])
         }
 
         process_message(&message);
+
+        printf("tutaj 2 \n");
     }
 
     exit(EXIT_SUCCESS);
