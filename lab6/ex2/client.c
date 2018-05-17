@@ -21,7 +21,7 @@ char path[10];
 
 void handler_SIGINT(int signo);
 int create_queue(char *path, int ID);
-void register_client(int key);
+void register_client(char* key);
 void mirror_request(char *text);
 struct msgBuf *receive_message();
 
