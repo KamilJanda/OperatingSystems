@@ -19,6 +19,8 @@ int CLIENT_ID;
 
 char path[10];
 
+struct mq_attr posix_attr;
+
 void handler_SIGINT(int signo);
 int create_queue(char *path, int ID);
 void register_client(char* key);
@@ -44,7 +46,7 @@ int main(int argc, char *argv[])
 
     sprintf(path, "/%d", getpid());
 
-    struct mq_attr posix_attr;
+    
     posix_attr.mq_maxmsg = MAX_MESSAGE_QUEUE_SIZE;
     posix_attr.mq_msgsize = sizeof(msgBuf);
 

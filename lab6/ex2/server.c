@@ -18,6 +18,8 @@ mqd_t QUEUE_ID;
 int IS_SERVER_ON = 1;
 struct clientsInfo clients[MAX_CLIENTS];
 
+struct mq_attr posix_attr;
+
 char path[10];
 
 void handler_SIGINT(int signo);
@@ -56,7 +58,7 @@ int main(int argc, char *argv[])
 
     struct mq_attr current_state;
 
-    struct mq_attr posix_attr;
+    
     posix_attr.mq_maxmsg = MAX_MESSAGE_QUEUE_SIZE;
     posix_attr.mq_msgsize = sizeof(msgBuf);
 
