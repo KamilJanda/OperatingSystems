@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     //PRIVATE_QUEUE = create_private_queue(privateKey);
     PRIVATE_QUEUE = mq_open(path, O_RDONLY | O_CREAT, 0666, NULL);
 
-    register_client(privateKey);
+    register_client(path);
 
     char *line = NULL;
     size_t len = 0;
@@ -108,7 +108,7 @@ int create_private_queue(int key)
 
 */
 
-void register_client(int key)
+void register_client(char* key)
 {
     int sizeOfMessage = sizeof(struct msgBuf);
     struct msgBuf *message = malloc(sizeOfMessage);
