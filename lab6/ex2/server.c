@@ -149,8 +149,8 @@ void mirror_action(struct msgBuf *message)
 {
     char *reverse = reverseConstString(message->text);
 
-    int client_id;
-    if ((client_id = get_id_by_pid(message->pid)) == -1)
+    int client_id = get_id_by_pid(message->pid);
+    if (client_id == -1)
         perror("Server: unregitser client \n");
 
     //send back
@@ -209,7 +209,9 @@ void register_action(struct msgBuf *message)
 
 */
 
-    int client_id = register_client(client_key, message->pid);
+    int client_id = -1;
+
+    client_id = register_client(client_key, message->pid);
 
     char *text = calloc(MAX_TEXT_SIZE, sizeof(char));
     sprintf(text, "%d", client_id);
