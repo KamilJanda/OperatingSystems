@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     
     posix_attr.mq_maxmsg = MAX_MESSAGE_QUEUE_SIZE;
-    posix_attr.mq_msgsize = sizeof(msgBuf);
+    posix_attr.mq_msgsize = sizeof(struct msgBuf);
 
     //char *home = getenv("HOME");
 
