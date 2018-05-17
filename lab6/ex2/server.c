@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
                 break;
         }
 
-        if (mq_receive(QUEUE_ID, &message, sizeOfmessage, NULL) == -1)
+        if (mq_receive(QUEUE_ID,(char*) &message, sizeOfmessage, NULL) == -1)
         {
             perror("Fail to receive message\n");
         }
