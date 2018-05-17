@@ -53,19 +53,13 @@ int main(int argc, char *argv[])
     posix_attr.mq_maxmsg = MAX_MESSAGE_QUEUE_SIZE;
     posix_attr.mq_msgsize = sizeof(struct msgBuf);
 
-    //char *home = getenv("HOME");
 
-    //SERVER_QUEUE = create_queue(home, PROJECT_ID);
     SERVER_QUEUE = mq_open(serverPath, O_WRONLY);
     if(SERVER_QUEUE == -1)
         perror("Fail to open queue \n");
 
-    //int privateKey = ftok(home, getpid());
 
-    //PRIVATE_QUEUE = create_private_queue(privateKey);
     PRIVATE_QUEUE = mq_open(path, O_RDONLY | O_CREAT, 0666, &posix_attr);
-
-    
 
     register_client(getpid());
 
@@ -85,42 +79,9 @@ int main(int argc, char *argv[])
 void handler_SIGINT(int signo)
 {
     printf("Received ctr+c \n");
-    //msgctl(PRIVATE_QUEUE, IPC_RMID, NULL);
     exit(EXIT_SUCCESS);
 }
 
-/*
-int create_queue(char *path, int ID)
-{
-    int key = ftok(path, ID);
-
-    int queue = msgget(key, IPC_PRIVATE);
-
-    if (key != -1)
-    {
-        return queue;
-    }
-    else
-    {
-        perror("Fial to crete queue");
-    }
-}
-
-int create_private_queue(int key)
-{
-    int queue = msgget(key, IPC_CREAT | 0666);
-
-    if (key != -1)
-    {
-        return queue;
-    }
-    else
-    {
-        perror("Fial to crete queue");
-    }
-}
-
-*/
 
 void register_client(int key)
 {
@@ -134,27 +95,22 @@ void register_client(int key)
 
     sprintf(message->text, "%d", key);
 
-    printf("xd1 \n");
+    
 
     if (mq_send(SERVER_QUEUE,(char*) message, sizeOfMessage, 1) == -1)
         perror("Client: REGISTER request failed\n");
 
-    printf("xd2 \n");
 
     struct msgBuf *receivedMessage = malloc(sizeOfMessage);
 
-    printf("xd3 \n");
 
     if (mq_receive(PRIVATE_QUEUE,(char*) receivedMessage, sizeOfMessage, NULL) == -1)
         perror("Client: catching LOGIN response failed\n");
 
-    printf("xd4 \n");
-
-   
-
+  
     printf("Registered client with key: %s \n", receivedMessage->text);
 
-    printf("xd5 \n");
+    
 
     free(message);
     free(receivedMessage);
@@ -229,7 +185,6 @@ struct msgBuf *receive_message()
 
 void close_queue()
 {
-    //msgctl(PRIVATE_QUEUE, IPC_RMID, NULL);
      mq_close(PRIVATE_QUEUE);
     mq_unlink(path);
 }

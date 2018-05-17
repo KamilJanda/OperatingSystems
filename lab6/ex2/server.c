@@ -31,7 +31,7 @@ void calc_action(struct msgBuf *message);
 void time_action(struct msgBuf *message);
 void end_action(struct msgBuf *message);
 void register_action(struct msgBuf *message);
-int register_client(int client_key, pid_t pid);
+int register_client(pid_t pid);
 void quit_action(struct msgBuf *message);
 char *reverseConstString(char const *str);
 int get_id();
@@ -53,9 +53,7 @@ int main(int argc, char *argv[])
 
     sprintf(path, "/%d", getpid());
 
-    //char *home = getenv("HOME");
 
-    //key_t publicKey = ftok(home, PROJECT_ID);
 
     struct mq_attr current_state;
 
@@ -73,7 +71,6 @@ int main(int argc, char *argv[])
 
     while (1)
     {
-        printf("tutaj 0 \n");
 
         if (IS_SERVER_ON == 0)
         {
@@ -85,7 +82,7 @@ int main(int argc, char *argv[])
                 break;
         }
 
-        printf("Tutaj 1\n");
+        
 
         if (mq_receive(QUEUE_ID,(char*) message, sizeOfmessage, NULL) == -1)
         {
@@ -94,7 +91,8 @@ int main(int argc, char *argv[])
 
         process_message(message);
 
-        printf("tutaj 2 \n");
+        
+
     }
 
     exit(EXIT_SUCCESS);
@@ -201,25 +199,17 @@ void register_action(struct msgBuf *message)
 {
     printf("received register signal\n");
 
-    int client_key;
-
-/*
-    if (sscanf(message->text, "%d", &client_key) < 0)
-        perror("Server: fail to read regiter message\n");
-
-*/
 
     int client_id = -1;
 
-    client_id = register_client(client_key, message->pid);
+    client_id = register_client(message->pid);
 
     char *text = calloc(MAX_TEXT_SIZE, sizeof(char));
     sprintf(text, "%d", client_id);
 
-    printf("before send \n");
+  
     send_message(clients[client_id].clientQueueDesc, REGISTER, text);
 
-    printf("after send \n");
 }
 
 void quit_action(struct msgBuf *message)
@@ -231,7 +221,6 @@ void quit_action(struct msgBuf *message)
     clients[client_id].used = 0;
     clients[client_id].pid = 0;
 
-    //msgctl(clients[client_id].clientQueueDesc, IPC_RMID, &posix_attr);
 
     mq_close(clients[client_id].clientQueueDesc);
 
@@ -250,7 +239,6 @@ void quit_action(struct msgBuf *message)
 void handler_SIGINT(int signo)
 {
     printf("Received ctr+c \n");
-    //msgctl(QUEUE_ID, IPC_RMID, NULL);
     exit(EXIT_SUCCESS);
 }
 
@@ -298,7 +286,7 @@ int get_id()
     return -1;
 }
 
-int register_client(int client_key, pid_t pid)
+int register_client(pid_t pid)
 {
     int client_id = get_id();
 
@@ -308,7 +296,6 @@ int register_client(int client_key, pid_t pid)
     char path[10];
     sprintf(path, "/%d", pid);
 
-    //int client_queue = mq_receive(client_key, 0);
     int client_queue = mq_open(path, O_WRONLY);
 
     clients[client_id].clientQueueDesc = client_queue;
@@ -344,6 +331,7 @@ int get_id_by_pid(pid_t pid)
     }
 
     return -1;
+    
 }
 
 void close_queue()
