@@ -66,7 +66,6 @@ int main(int argc, char *argv[])
 
     register_client(getpid());
 
-    printf("2 \n");
 
     char *line = NULL;
     size_t len = 0;

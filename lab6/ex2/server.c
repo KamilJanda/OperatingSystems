@@ -64,8 +64,9 @@ int main(int argc, char *argv[])
 
     QUEUE_ID = mq_open(serverPath, O_RDONLY | O_CREAT, 0666, &posix_attr);
 
-    struct msgBuf message;
     int sizeOfmessage = sizeof(struct msgBuf);
+    struct msgBuf* message= malloc(sizeOfmessage);
+    
 
     init_clients_info();
 
@@ -85,12 +86,14 @@ int main(int argc, char *argv[])
 
         printf("Tutaj 1\n");
 
-        if (mq_receive(QUEUE_ID,(char*) &message, sizeOfmessage, &posix_attr) == -1)
+        if (mq_receive(QUEUE_ID,(char*) message, sizeOfmessage, &posix_attr) == -1)
         {
             perror("Fail to receive message\n");
         }
 
-        process_message(&message);
+        process_message(message);
+
+        
 
         printf("tutaj 2 \n");
     }
