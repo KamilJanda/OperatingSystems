@@ -149,7 +149,7 @@ void mirror_action(struct msgBuf *message)
 {
     char *reverse = reverseConstString(message->text);
 
-    int client_id = get_id_by_pid(message->pid);
+    int client_id = (int) get_id_by_pid(message->pid);
     if (client_id == -1)
         perror("Server: unregitser client \n");
 
