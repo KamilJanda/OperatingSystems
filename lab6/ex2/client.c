@@ -44,6 +44,10 @@ int main(int argc, char *argv[])
 
     sprintf(path, "/%d", getpid());
 
+    struct mq_attr posix_attr;
+    posix_attr.mq_maxmsg = MAX_MESSAGE_QUEUE_SIZE;
+    posix_attr.mq_msgsize = sizeof(msgBuf);
+
     //char *home = getenv("HOME");
 
     //SERVER_QUEUE = create_queue(home, PROJECT_ID);
@@ -52,7 +56,7 @@ int main(int argc, char *argv[])
     //int privateKey = ftok(home, getpid());
 
     //PRIVATE_QUEUE = create_private_queue(privateKey);
-    PRIVATE_QUEUE = mq_open(path, O_RDONLY | O_CREAT, 0666, NULL);
+    PRIVATE_QUEUE = mq_open(path, O_RDONLY | O_CREAT, 0666, &posix_attr);
 
     register_client(path);
 
@@ -122,7 +126,7 @@ void register_client(char* key)
 
     struct msgBuf *receivedMessage = malloc(sizeOfMessage);
 
-    if (mq_receive(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, NULL) == -1)
+    if (mq_receive(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, &posix_attr) == -1)
         ferror("Client: catching LOGIN response failed\n");
 
     int client_id;
@@ -194,7 +198,7 @@ struct msgBuf *receive_message()
     int sizeOfMessage = sizeof(struct msgBuf);
     struct msgBuf *receivedMessage = malloc(sizeOfMessage);
 
-    if (mq_receive(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, NULL) == -1)
+    if (mq_receive(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, &posix_attr) == -1)
         ferror("Client: catching LOGIN response failed\n");
 
     return receivedMessage;
@@ -202,7 +206,9 @@ struct msgBuf *receive_message()
 
 void close_queue()
 {
-    msgctl(PRIVATE_QUEUE, IPC_RMID, NULL);
+    //msgctl(PRIVATE_QUEUE, IPC_RMID, NULL);
+     mq_close(PRIVATE_QUEUE);
+    mq_unlink(path);
 }
 
 void call_action(char *line)

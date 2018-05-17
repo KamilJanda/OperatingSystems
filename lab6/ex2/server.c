@@ -56,7 +56,11 @@ int main(int argc, char *argv[])
 
     struct mq_attr current_state;
 
-    QUEUE_ID = mq_open(path, O_RDONLY | O_CREAT, 0666, NULL);
+    struct mq_attr posix_attr;
+    posix_attr.mq_maxmsg = MAX_MESSAGE_QUEUE_SIZE;
+    posix_attr.mq_msgsize = sizeof(msgBuf);
+
+    QUEUE_ID = mq_open(path, O_RDONLY | O_CREAT, 0666, &posix_attr);
 
     struct msgBuf message;
     int sizeOfmessage = sizeof(struct msgBuf);
@@ -75,7 +79,7 @@ int main(int argc, char *argv[])
                 break;
         }
 
-        if (mq_receive(QUEUE_ID,(char*) &message, sizeOfmessage, NULL) == -1)
+        if (mq_receive(QUEUE_ID,(char*) &message, sizeOfmessage, &posix_attr) == -1)
         {
             perror("Fail to receive message\n");
         }
@@ -208,7 +212,7 @@ void quit_action(struct msgBuf *message)
     clients[client_id].used = 0;
     clients[client_id].pid = 0;
 
-    msgctl(clients[client_id].clientQueueDesc, IPC_RMID, NULL);
+    msgctl(clients[client_id].clientQueueDesc, IPC_RMID, &posix_attr);
 
     clients[client_id].clientQueueDesc = 0;
 
