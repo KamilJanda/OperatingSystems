@@ -86,14 +86,12 @@ int main(int argc, char *argv[])
 
         printf("Tutaj 1\n");
 
-        if (mq_receive(QUEUE_ID,(char*) message, sizeOfmessage, &posix_attr) == -1)
+        if (mq_receive(QUEUE_ID,(char*) message, sizeOfmessage, NULL) == -1)
         {
             perror("Fail to receive message\n");
         }
 
         process_message(message);
-
-        
 
         printf("tutaj 2 \n");
     }
