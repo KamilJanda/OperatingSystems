@@ -60,7 +60,11 @@ int main(int argc, char *argv[])
     //PRIVATE_QUEUE = create_private_queue(privateKey);
     PRIVATE_QUEUE = mq_open(path, O_RDONLY | O_CREAT, 0666, &posix_attr);
 
+    printf("1 \n");
+
     register_client(path);
+
+    printf("2 \n");
 
     char *line = NULL;
     size_t len = 0;
