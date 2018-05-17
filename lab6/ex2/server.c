@@ -294,7 +294,7 @@ int register_client(int client_key, pid_t pid)
     if (client_id == -1)
         perror("Server: Cannot regiter more clients \n");
 
-    char *path;
+    char path[10];
     sprintf(path, "/%d", pid);
 
     //int client_queue = mq_receive(client_key, 0);
