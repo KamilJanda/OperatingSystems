@@ -194,8 +194,11 @@ void register_action(struct msgBuf *message)
 
     int client_key;
 
+/*
     if (sscanf(message->text, "%d", &client_key) < 0)
         perror("Server: fail to read regiter message\n");
+
+*/
 
     int client_id = register_client(client_key, message->pid);
 
@@ -286,6 +289,8 @@ int register_client(int client_key, pid_t pid)
 
     //int client_queue = mq_receive(client_key, 0);
     int client_queue = mq_open(path, O_WRONLY);
+
+    printf("tutaj \n");
 
     clients[client_id].clientQueueDesc = client_queue;
     clients[client_id].pid = pid;
