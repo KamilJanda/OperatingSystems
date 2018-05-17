@@ -4,8 +4,8 @@ SERVER = server
 CLIENT = client
 
 all: server.o client.o
-	$(CC) $(CFLAGS) $(SERVER).o -o $(SERVER)
-	$(CC) $(CFLAGS) $(CLIENT).o -o $(CLIENT)
+	$(CC) $(CFLAGS) $(SERVER).o -o $(SERVER) -lrt
+	$(CC) $(CFLAGS) $(CLIENT).o -o $(CLIENT) -lrt
 
 server.o: server.c
 	$(CC) $(CFLAGS) -c $(SERVER).c -o $(SERVER).o
