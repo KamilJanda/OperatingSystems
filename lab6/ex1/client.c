@@ -4,6 +4,7 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <string.h>
+#include <signal.h>
 
 #include "communication.h"
 
@@ -103,12 +104,12 @@ void register_client(int key)
     sprintf(message->text, "%d", key);
 
     if (msgsnd(SERVER_QUEUE, message, sizeOfMessage, 0) == -1)
-        ferror("Client: REGISTER request failed\n");
+        perror("Client: REGISTER request failed\n");
 
     struct msgBuf *receivedMessage = malloc(sizeOfMessage);
 
     if (msgrcv(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, 0, 0) == -1)
-        ferror("Client: catching LOGIN response failed\n");
+        perror("Client: catching LOGIN response failed\n");
 
     int client_id;
 
@@ -171,7 +172,7 @@ void send_message(int queueDesc, int type, char *text)
         strcpy(sendBack->text, text);
 
     if (msgsnd(queueDesc, sendBack, sizeOfMessage, 0) == -1)
-        ferror("Client: REGISTER request failed\n");
+        perror("Client: REGISTER request failed\n");
 }
 
 struct msgBuf *receive_message()
@@ -180,7 +181,7 @@ struct msgBuf *receive_message()
     struct msgBuf *receivedMessage = malloc(sizeOfMessage);
 
     if (msgrcv(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, 0, 0) == -1)
-        ferror("Client: catching LOGIN response failed\n");
+        perror("Client: catching LOGIN response failed\n");
 
     return receivedMessage;
 }

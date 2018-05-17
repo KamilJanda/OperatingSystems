@@ -5,6 +5,7 @@
 #include <sys/msg.h>
 #include <string.h>
 #include <time.h>
+#include <signal.h>
 
 #include "communication.h"
 
@@ -87,6 +88,7 @@ int create_queue(int key)
     else
     {
         perror("Fial to crete queue");
+        return -1;
     }
 }
 
@@ -282,7 +284,7 @@ void send_message(int queueDesc, int type, char *text)
     strcpy(sendBack->text, text);
 
     if (msgsnd(queueDesc, sendBack, sizeOfMessage, 0) == -1)
-        ferror("Server: request failed\n");
+        perror("Server: request failed\n");
 }
 
 int get_id_by_pid(pid_t pid)
