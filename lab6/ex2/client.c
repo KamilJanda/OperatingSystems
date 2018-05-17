@@ -4,12 +4,20 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <string.h>
+#include <time.h>
+#include <signal.h>
+
+#include <fcntl.h>           
+#include <sys/stat.h>
+#include <mqueue.h>
 
 #include "communication.h"
 
-int PRIVATE_QUEUE;
-int SERVER_QUEUE;
+mqd_t PRIVATE_QUEUE;
+mqd_t SERVER_QUEUE;
 int CLIENT_ID;
+
+char path[10];
 
 void handler_SIGINT(int signo);
 int create_queue(char *path, int ID);
@@ -34,13 +42,17 @@ int main(int argc, char *argv[])
 
     atexit(close_queue);
 
-    char *home = getenv("HOME");
+    sprintf(path, "/%d", getpid());
 
-    SERVER_QUEUE = create_queue(home, PROJECT_ID);
+    //char *home = getenv("HOME");
 
-    int privateKey = ftok(home, getpid());
+    //SERVER_QUEUE = create_queue(home, PROJECT_ID);
+    SERVER_QUEUE = mq_open(serverPath, O_WRONLY);
 
-    PRIVATE_QUEUE = create_private_queue(privateKey);
+    //int privateKey = ftok(home, getpid());
+
+    //PRIVATE_QUEUE = create_private_queue(privateKey);
+    PRIVATE_QUEUE = mq_open(path, O_RDONLY | O_CREAT, 0666, NULL);
 
     register_client(privateKey);
 
@@ -63,6 +75,7 @@ void handler_SIGINT(int signo)
     exit(EXIT_SUCCESS);
 }
 
+/*
 int create_queue(char *path, int ID)
 {
     int key = ftok(path, ID);
@@ -93,6 +106,8 @@ int create_private_queue(int key)
     }
 }
 
+*/
+
 void register_client(int key)
 {
     int sizeOfMessage = sizeof(struct msgBuf);
@@ -102,12 +117,12 @@ void register_client(int key)
     message->pid = getpid();
     sprintf(message->text, "%d", key);
 
-    if (msgsnd(SERVER_QUEUE, message, sizeOfMessage, 0) == -1)
+    if (mq_send(SERVER_QUEUE, message, sizeOfMessage, 1) == -1)
         ferror("Client: REGISTER request failed\n");
 
     struct msgBuf *receivedMessage = malloc(sizeOfMessage);
 
-    if (msgrcv(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, 0, 0) == -1)
+    if (mq_receive(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, NULL) == -1)
         ferror("Client: catching LOGIN response failed\n");
 
     int client_id;
@@ -170,7 +185,7 @@ void send_message(int queueDesc, int type, char *text)
     if (text != NULL)
         strcpy(sendBack->text, text);
 
-    if (msgsnd(queueDesc, sendBack, sizeOfMessage, 0) == -1)
+    if (mq_send(queueDesc, sendBack, sizeOfMessage, 1) == -1)
         ferror("Client: REGISTER request failed\n");
 }
 
@@ -179,7 +194,7 @@ struct msgBuf *receive_message()
     int sizeOfMessage = sizeof(struct msgBuf);
     struct msgBuf *receivedMessage = malloc(sizeOfMessage);
 
-    if (msgrcv(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, 0, 0) == -1)
+    if (mq_receive(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, NULL) == -1)
         ferror("Client: catching LOGIN response failed\n");
 
     return receivedMessage;

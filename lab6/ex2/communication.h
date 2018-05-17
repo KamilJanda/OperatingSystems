@@ -28,4 +28,6 @@ struct clientsInfo{
     int clientQueueDesc;
 };
 
+const char serverPath[] = "/server";
+
 #endif
