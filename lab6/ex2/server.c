@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 #include <signal.h>
+#include <unistd.h>
 
 #include <fcntl.h>           
 #include <sys/stat.h>
