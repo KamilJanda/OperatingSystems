@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
     printf("1 \n");
 
-    register_client(path);
+    register_client(getpid());
 
     printf("2 \n");
 
@@ -118,14 +118,14 @@ int create_private_queue(int key)
 
 */
 
-void register_client(char* key)
+void register_client(int key)
 {
     int sizeOfMessage = sizeof(struct msgBuf);
     struct msgBuf *message = malloc(sizeOfMessage);
 
     message->mtype = REGISTER;
     message->pid = getpid();
-    sprintf(message->text, "%s", key);
+    sprintf(message->text, "/%d", key);
 
     if (mq_send(SERVER_QUEUE, message, sizeOfMessage, 1) == -1)
         ferror("Client: REGISTER request failed\n");
