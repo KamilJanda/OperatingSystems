@@ -126,23 +126,31 @@ void register_client(int key)
     message->mtype = REGISTER;
     message->pid = getpid();
 
-    printf("xd1 \n");
+    
 
     sprintf(message->text, "/%d", key);
 
-    printf("xd2 \n");
+    printf("xd1 \n");
 
     if (mq_send(SERVER_QUEUE, message, sizeOfMessage, 1) == -1)
         ferror("Client: REGISTER request failed\n");
 
+    printf("xd2 \n");
+
     struct msgBuf *receivedMessage = malloc(sizeOfMessage);
+
+    printf("xd3 \n");
 
     if (mq_receive(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, &posix_attr) == -1)
         ferror("Client: catching LOGIN response failed\n");
 
+    printf("xd4 \n");
+
     int client_id;
 
     printf("Registered client with key: %s \n", receivedMessage->text);
+
+    printf("xd5 \n");
 
     free(message);
     free(receivedMessage);
