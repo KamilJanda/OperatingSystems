@@ -305,14 +305,15 @@ void send_message(mqd_t mqdes, int type, char *text)
     sendBack->mtype = type;
     sendBack->pid = getpid();
 
-    printf("xddd 2\n");
+   
 
     strcpy(sendBack->text, text);
 
-    printf("xddd 3\n");
 
-    if (mq_send(mqdes, sendBack, sizeOfMessage, 1) == -1)
+    if (mq_send(mqdes,(char*) sendBack, sizeOfMessage, 1) == -1)
         ferror("Server: request failed\n");
+
+     printf("xddd 2\n");
 }
 
 int get_id_by_pid(pid_t pid)
