@@ -14,7 +14,7 @@
 #include "communication.h"
 
 mqd_t PRIVATE_QUEUE;
-mqd_t SERVER_QUEUE;
+mqd_t SERVER_QUEUE = -1;
 int CLIENT_ID;
 
 char path[10];
@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
 
     //SERVER_QUEUE = create_queue(home, PROJECT_ID);
     SERVER_QUEUE = mq_open(path, O_WRONLY);
+    if (SERVER_QUEUE == -1) FAILURE_EXIT("Opening public queue failed\n");
 
     //int privateKey = ftok(home, getpid());
 
@@ -132,7 +133,7 @@ void register_client(int key)
 
     printf("xd1 \n");
 
-    if (mq_send(SERVER_QUEUE, message, sizeOfMessage, 1) == -1)
+    if (mq_send(SERVER_QUEUE,(char*) message, sizeOfMessage, 1) == -1)
         ferror("Client: REGISTER request failed\n");
 
     printf("xd2 \n");
