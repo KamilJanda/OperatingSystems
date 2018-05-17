@@ -111,6 +111,7 @@ int create_queue(int key)
     else
     {
         perror("Fial to crete queue");
+        return -1;
     }
 }
 
@@ -228,7 +229,14 @@ void quit_action(struct msgBuf *message)
     clients[client_id].used = 0;
     clients[client_id].pid = 0;
 
-    msgctl(clients[client_id].clientQueueDesc, IPC_RMID, &posix_attr);
+    //msgctl(clients[client_id].clientQueueDesc, IPC_RMID, &posix_attr);
+
+    mq_close(clients[client_id].clientQueueDesc);
+
+    char path[10];
+    sprintf(path, "/%d", pid);
+
+    mq_unlink(path);
 
     clients[client_id].clientQueueDesc = 0;
 
