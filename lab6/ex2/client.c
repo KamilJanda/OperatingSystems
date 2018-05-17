@@ -121,7 +121,7 @@ void register_client(char* key)
 
     message->mtype = REGISTER;
     message->pid = getpid();
-    sprintf(message->text, "%d", key);
+    sprintf(message->text, "%s", key);
 
     if (mq_send(SERVER_QUEUE, message, sizeOfMessage, 1) == -1)
         ferror("Client: REGISTER request failed\n");
