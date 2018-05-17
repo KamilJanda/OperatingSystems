@@ -81,6 +81,8 @@ int main(int argc, char *argv[])
                 break;
         }
 
+        printf("Tutaj \n");
+
         if (mq_receive(QUEUE_ID,(char*) &message, sizeOfmessage, &posix_attr) == -1)
         {
             perror("Fail to receive message\n");
@@ -310,7 +312,6 @@ void send_message(mqd_t mqdes, int type, char *text)
     if (mq_send(mqdes,(char*) sendBack, sizeOfMessage, 1) == -1)
         ferror("Server: request failed\n");
 
-     printf("xddd 2\n");
 }
 
 int get_id_by_pid(pid_t pid)
