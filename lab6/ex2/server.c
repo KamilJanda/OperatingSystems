@@ -205,6 +205,7 @@ void register_action(struct msgBuf *message)
     char *text = calloc(MAX_TEXT_SIZE, sizeof(char));
     sprintf(text, "%d", client_id);
 
+    printf("before send \n");
     send_message(clients[client_id].clientQueueDesc, REGISTER, text);
 }
 
@@ -290,8 +291,6 @@ int register_client(int client_key, pid_t pid)
     //int client_queue = mq_receive(client_key, 0);
     int client_queue = mq_open(path, O_WRONLY);
 
-    printf("tutaj \n");
-
     clients[client_id].clientQueueDesc = client_queue;
     clients[client_id].pid = pid;
 
@@ -305,7 +304,12 @@ void send_message(mqd_t mqdes, int type, char *text)
 
     sendBack->mtype = type;
     sendBack->pid = getpid();
+
+    printf("xddd 2\n");
+
     strcpy(sendBack->text, text);
+
+    printf("xddd 3\n");
 
     if (mq_send(mqdes, sendBack, sizeOfMessage, 1) == -1)
         ferror("Server: request failed\n");
