@@ -6,6 +6,8 @@
 #include <string.h>
 #include <time.h>
 #include <signal.h>
+#include <unistd.h>
+
 
 #include "communication.h"
 
@@ -28,6 +30,7 @@ int get_id();
 void init_clients_info();
 void send_message(int queueDesc, int type, char *text);
 void close_queue();
+int get_id_by_pid(pid_t pid);
 
 int main(int argc, char *argv[])
 {

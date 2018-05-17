@@ -5,6 +5,7 @@
 #include <sys/msg.h>
 #include <string.h>
 #include <signal.h>
+#include <unistd.h>
 
 #include "communication.h"
 
@@ -17,6 +18,7 @@ int create_queue(char *path, int ID);
 void register_client(int key);
 void mirror_request(char *text);
 struct msgBuf *receive_message();
+int create_private_queue(int key);
 
 void send_message(int queueDesc, int type, char *text);
 void calc_request(char *text);
@@ -60,7 +62,6 @@ int main(int argc, char *argv[])
 void handler_SIGINT(int signo)
 {
     printf("Received ctr+c \n");
-    //msgctl(PRIVATE_QUEUE, IPC_RMID, NULL);
     exit(EXIT_SUCCESS);
 }
 
@@ -76,7 +77,9 @@ int create_queue(char *path, int ID)
     }
     else
     {
+        
         perror("Fial to crete queue");
+        return -1;
     }
 }
 
@@ -91,6 +94,7 @@ int create_private_queue(int key)
     else
     {
         perror("Fial to crete queue");
+        return -1;
     }
 }
 
@@ -111,7 +115,7 @@ void register_client(int key)
     if (msgrcv(PRIVATE_QUEUE, receivedMessage, sizeOfMessage, 0, 0) == -1)
         perror("Client: catching LOGIN response failed\n");
 
-    int client_id;
+    
 
     printf("Registered client with key: %s \n", receivedMessage->text);
 
@@ -197,7 +201,7 @@ void call_action(char *line)
     strcpy(temp, line);
     char *actionStr = strtok(temp, " ");
 
-    char *message[MAX_TEXT_SIZE];
+    char message[MAX_TEXT_SIZE];
 
     char *text = strchr(line, ' ');
     if (text != NULL)
