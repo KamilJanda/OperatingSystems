@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     //PRIVATE_QUEUE = create_private_queue(privateKey);
     PRIVATE_QUEUE = mq_open(path, O_RDONLY | O_CREAT, 0666, &posix_attr);
 
-    printf("1 \n");
+    
 
     register_client(getpid());
 
@@ -125,7 +125,12 @@ void register_client(int key)
 
     message->mtype = REGISTER;
     message->pid = getpid();
+
+    printf("xd1 \n");
+
     sprintf(message->text, "/%d", key);
+
+    printf("xd2 \n");
 
     if (mq_send(SERVER_QUEUE, message, sizeOfMessage, 1) == -1)
         ferror("Client: REGISTER request failed\n");
