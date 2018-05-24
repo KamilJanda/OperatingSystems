@@ -12,7 +12,7 @@
 #define PROJECT_PATH getenv("HOME")
 #define PROJECT_ID 1
 
-/* int SEMAPHORE_ID; */
+int SEMAPHORE_ID;
 
 //Barber status
 #define SLEEP 1

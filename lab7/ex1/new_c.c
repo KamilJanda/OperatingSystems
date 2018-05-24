@@ -26,14 +26,11 @@ void wake_barber_up()
     print_text_and_pid("Client woke barber up", getpid());
 
     //change barber status
-    BARBER_SHOP->barberStatus = CLIENT_WAKE_BARBER_UP;
+    BARBER_SHOP->barberStatus = AWAKEN;
 
     CURRENT_CLIENT->clientStatus = WOKE_BARBER_UP;
-    //BARBER_SHOP -> currentClient = CURRENT_CLIENT;
 
     BARBER_SHOP->currentClientPid = getpid();
-
-    printf("changerd barber stat to awake \n");
 }
 
 void take_chair()
@@ -47,18 +44,17 @@ void take_chair()
 
 void leave_after_clipping()
 {
-    if (BARBER_SHOP->barberStatus != FINISHED)
+    /* if (BARBER_SHOP->barberStatus != FINISHED)
     {
         return;
-    }
-
-    /* while (1)
-    {
-        realise_lock(SEMAPHORE_ID);
-        get_lock(SEMAPHORE_ID);
-        if (BARBER_SHOP->barberStatus == FINISHED)
-            break;
     } */
+
+    while (1) {
+            realise_lock(SEMAPHORE_ID);
+            get_lock(SEMAPHORE_ID);
+            if (BARBER_SHOP->barberStatus == FINISHED) break;
+        }
+
 
     print_text_and_pid("Leave barber after clipping", getpid());
     BARBER_SHOP->barberStatus = IDLE;
@@ -122,46 +118,25 @@ void run_client(int numberOfClipping)
         CURRENT_CLIENT->clientStatus = NEW_CLIENT;
         CURRENT_CLIENT->clientPid = getpid();
 
-        int left = 0;
+        
+        get_lock(SEMAPHORE_ID);
 
-        //printf("tataj> %d\n",getpid());
-
-        while (left != 1)
+        if(BARBER_SHOP->barberStatus == SLEEP)
         {
-            //printf("before lock \n");
-
-            get_lock(SEMAPHORE_ID);
-
-            //printf("get lock \n");
-
-            switch (CURRENT_CLIENT->clientStatus)
-            {
-            case NEW_CLIENT:
-                check_barber();
-                break;
-            case LEFT:
-                left = 1;
-                break;
-            case INVITED:
-                take_chair();
-                break;
-            case DONE:
-                leave_after_clipping();
-                break;
-            case WOKE_BARBER_UP:
-                wait_for_barber();
-                break;
-            case WAIT:
-                wait_for_barber();
-                break;
-            default:
-                break;
-            }
-
-            //printf("-----Barber: %d Client: %d queue: %d\n" ,BARBER_SHOP->barberStatus,CURRENT_CLIENT->clientStatus,BARBER_SHOP->clientsInQueue);
-
-            realise_lock(SEMAPHORE_ID);
+            wake_barber_up();
         }
+        else if(is_full(BARBER_SHOP))
+        {
+            sit_in_waiting_room();
+        }
+        else
+        {
+            no_sits_leave();
+            realise_lock(SEMAPHORE_ID);
+            break;
+        }
+
+        realise_lock(SEMAPHORE_ID);
 
         free(CURRENT_CLIENT);
     }
@@ -249,31 +224,26 @@ int main(int argc, char *argv[])
     set_up_memory();
     create_semaphore();
 
-    pid_t pid;
-
     for (int i = 0; i < numberOfClients; i++)
     {
         //spaw_client(numberOfClipping);
-        pid = fork();
+        pid_t pid = fork();
         if (pid == 0)
         {
             run_client(numberOfClipping);
             exit(EXIT_SUCCESS);
-        }
+        }  
     }
+
+    //printf("-----------------------main tutaj \n");
 
     /* while (wait(0))
         if (errno != ECHILD)
             break; */
 
-    
-        /* pid_t wpid;
-        int status = 0;
-        while ((wpid = wait(&status)) > 0)
-            ; */
-    
-
-    //printf("-----------------------main tutaj \n");
+    /* pid_t wpid;
+    int status = 0;
+    while ((wpid = wait(&status)) > 0); */
 
     
 

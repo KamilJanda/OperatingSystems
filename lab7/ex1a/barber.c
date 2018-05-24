@@ -32,53 +32,38 @@ void wake_up()
 
 void invite_client()
 {
-    //BARBER_SHOP->currentClient = pop(BARBER_SHOP);
-    BARBER_SHOP->currentClientPid = pop(BARBER_SHOP);
-
+    BARBER_SHOP->currentClient = pop(BARBER_SHOP);
     //change client status
-    /* BARBER_SHOP->currentClient->clientStatus = INVITED;
-    print_text_and_pid("Barber: invited client \n",  BARBER_SHOP->currentClient->clientPid); */
-
-    print_text_and_pid("Barber: invited client ",  BARBER_SHOP->currentClientPid);
+    BARBER_SHOP->currentClient->clientStatus = INVITED;
+    print_text_and_pid("Barber: invited client \n",  BARBER_SHOP->currentClient->clientPid);
     BARBER_SHOP->barberStatus = READY;
 }
 
-
 void invite_client_after_awake()
 {
-    printf("inivite client %d \n",BARBER_SHOP->currentClientPid);
+    printf("inivite client \n");
     //change client status
-    //BARBER_SHOP->currentClient->clientStatus = INVITED;
-    //print_text_and_pid("Barber: invited client \n",  BARBER_SHOP->currentClient->clientPid);
-
-    print_text_and_pid("Barber: invited client after awake",  BARBER_SHOP->currentClientPid);
+    BARBER_SHOP->currentClient->clientStatus = INVITED;
+    print_text_and_pid("Barber: invited client \n",  BARBER_SHOP->currentClient->clientPid);
     BARBER_SHOP->barberStatus = READY;
+}
+void start_clipping()
+{
+    if(BARBER_SHOP->currentClient->clientStatus != ON_CHAIR) 
+        return;
+    print_text_and_pid("Barber is clipping \n", getpid());
+    BARBER_SHOP->barberStatus = BUSY;
 }
 
 void end_clipping()
 {
-    print_text_and_pid("Barber finished clipping \n", BARBER_SHOP->currentClientPid);
+    print_text_and_pid("Barber finished clipping \n", getpid());
 
     //change client status
-    //BARBER_SHOP -> currentClient -> clientStatus = DONE;
+    BARBER_SHOP -> currentClient -> clientStatus = DONE;
 
-
-    //BARBER_SHOP->barberStatus = IDLE;
-    BARBER_SHOP->barberStatus = FINISHED;
+    BARBER_SHOP->barberStatus = IDLE;
 }
-
-void start_clipping()
-{
-    //if(BARBER_SHOP->currentClient->clientStatus != ON_CHAIR) 
-        //return;
-    print_text_and_pid("Barber is clipping \n", BARBER_SHOP->currentClientPid);
-    //sleep(2);
-    BARBER_SHOP->barberStatus = BUSY;
-
-    end_clipping();
-}
-
-
 
 void clean_up() {
     if(SEMAPHORE_ID != 0) {
@@ -129,7 +114,7 @@ void init_waiting_room(int numberOfSeats)
     BARBER_SHOP->currentClient = NULL;
 
     for (int i = 0; i < MAX_WAITING_ROOM_SIZE; i++)
-        BARBER_SHOP->queue[i] = 0;
+        BARBER_SHOP->queue[i] = NULL;
 }
 
 void create_semaphore()
@@ -171,9 +156,9 @@ void start_barbershop()
         case READY:
             start_clipping();
             break;
-        /* case BUSY:
+        case BUSY:
             end_clipping();
-            break; */
+            break;
         default:
             //printf("no state were chosen\n");
             break;

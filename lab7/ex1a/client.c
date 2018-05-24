@@ -11,73 +11,54 @@
 #include <sys/types.h>
 #include <time.h>
 
-#include <errno.h>
-
 #include "common.h"
 
 struct barberShop *BARBER_SHOP;
 int SEMAPHORE_ID;
 int SHARED_MEMORY_ID;
 
-struct client *CURRENT_CLIENT;
+
+struct client* CURRENT_CLIENT;
 
 void wake_barber_up()
 {
-    print_text_and_pid("Client woke barber up", getpid());
+    print_text_and_pid("Client woke barber up",getpid());
 
     //change barber status
-    BARBER_SHOP->barberStatus = CLIENT_WAKE_BARBER_UP;
+    BARBER_SHOP -> barberStatus = AWAKEN;
 
-    CURRENT_CLIENT->clientStatus = WOKE_BARBER_UP;
-    //BARBER_SHOP -> currentClient = CURRENT_CLIENT;
+    CURRENT_CLIENT -> clientStatus = WOKE_BARBER_UP;
+    BARBER_SHOP -> currentClient = CURRENT_CLIENT;
 
-    BARBER_SHOP->currentClientPid = getpid();
+    
 
     printf("changerd barber stat to awake \n");
 }
 
 void take_chair()
 {
-    print_text_and_pid("Client took a chair", getpid());
-
-    BARBER_SHOP->barberStatus = READY;
-    //CURRENT_CLIENT -> clientStatus = ON_CHAIR;
-    CURRENT_CLIENT->clientStatus = DONE;
+    print_text_and_pid("Client took a chair",getpid());
+    CURRENT_CLIENT -> clientStatus = ON_CHAIR;
 }
 
 void leave_after_clipping()
 {
-    if (BARBER_SHOP->barberStatus != FINISHED)
-    {
-        return;
-    }
-
-    /* while (1)
-    {
-        realise_lock(SEMAPHORE_ID);
-        get_lock(SEMAPHORE_ID);
-        if (BARBER_SHOP->barberStatus == FINISHED)
-            break;
-    } */
-
-    print_text_and_pid("Leave barber after clipping", getpid());
-    BARBER_SHOP->barberStatus = IDLE;
-
-    CURRENT_CLIENT->clientStatus = LEFT;
-    //BARBER_SHOP->currentClient = -1;
+    print_text_and_pid("Leave barber after clipping",getpid());
+    CURRENT_CLIENT ->clientStatus = LEFT;
+    BARBER_SHOP -> currentClient = NULL;
 }
 
 void sit_in_waiting_room()
 {
     print_text_and_pid("Client sit in waiting room", getpid());
-    CURRENT_CLIENT->clientStatus = WAIT;
-    add(getpid(), BARBER_SHOP);
+    CURRENT_CLIENT -> clientStatus = WAIT;
+    add(CURRENT_CLIENT, BARBER_SHOP);
 }
 
 void no_sits_leave()
 {
-    print_text_and_pid("No sits client left", getpid());
-    CURRENT_CLIENT->clientPid = LEFT;
+    print_text_and_pid("No sits client left",getpid());
+    CURRENT_CLIENT -> clientPid = LEFT;
 }
 
 void check_for_sit()
@@ -104,35 +85,21 @@ void check_barber()
     }
 }
 
-void wait_for_barber()
-{
-    if (BARBER_SHOP->barberStatus == READY && BARBER_SHOP->currentClientPid == getpid())
-    {
-        CURRENT_CLIENT->clientStatus = INVITED;
-        printf("Changed client stat to ivited \n");
-    }
-}
-
 void run_client(int numberOfClipping)
 {
+
     for (int i = 0; i < numberOfClipping; i++)
     {
         CURRENT_CLIENT = malloc(sizeof(struct client));
 
-        CURRENT_CLIENT->clientStatus = NEW_CLIENT;
-        CURRENT_CLIENT->clientPid = getpid();
+        CURRENT_CLIENT -> clientStatus = NEW_CLIENT;
+        CURRENT_CLIENT -> clientPid = getpid();
 
         int left = 0;
 
-        //printf("tataj> %d\n",getpid());
-
         while (left != 1)
         {
-            //printf("before lock \n");
-
             get_lock(SEMAPHORE_ID);
-
-            //printf("get lock \n");
 
             switch (CURRENT_CLIENT->clientStatus)
             {
@@ -148,17 +115,10 @@ void run_client(int numberOfClipping)
             case DONE:
                 leave_after_clipping();
                 break;
-            case WOKE_BARBER_UP:
-                wait_for_barber();
-                break;
-            case WAIT:
-                wait_for_barber();
-                break;
             default:
                 break;
             }
 
-            //printf("-----Barber: %d Client: %d queue: %d\n" ,BARBER_SHOP->barberStatus,CURRENT_CLIENT->clientStatus,BARBER_SHOP->clientsInQueue);
 
             realise_lock(SEMAPHORE_ID);
         }
@@ -166,13 +126,13 @@ void run_client(int numberOfClipping)
         free(CURRENT_CLIENT);
     }
 
-    //exit(EXIT_SUCCESS);
+    exit(EXIT_SUCCESS);
 }
 
 void spaw_client(int numberOfClipping)
 {
     pid_t pid = fork();
-    if (pid == 0)
+    if(pid == 0)
     {
         run_client(numberOfClipping);
     }
@@ -249,33 +209,10 @@ int main(int argc, char *argv[])
     set_up_memory();
     create_semaphore();
 
-    pid_t pid;
-
-    for (int i = 0; i < numberOfClients; i++)
+    for(int i=0;i<numberOfClients;i++)
     {
-        //spaw_client(numberOfClipping);
-        pid = fork();
-        if (pid == 0)
-        {
-            run_client(numberOfClipping);
-            exit(EXIT_SUCCESS);
-        }
+        spaw_client(numberOfClipping);
     }
-
-    /* while (wait(0))
-        if (errno != ECHILD)
-            break; */
-
-    
-        /* pid_t wpid;
-        int status = 0;
-        while ((wpid = wait(&status)) > 0)
-            ; */
-    
-
-    //printf("-----------------------main tutaj \n");
-
-    
 
     return 0;
 }
