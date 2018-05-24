@@ -266,9 +266,9 @@ int main(int argc, char *argv[])
         }
     }
 
-    /* while (wait(0))
+    while (wait(0))
         if (errno != ECHILD)
-            break; */
+            break;
 
     
         /* pid_t wpid;
