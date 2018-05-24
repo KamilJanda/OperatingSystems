@@ -1,22 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
-#include <string.h>
 #include <signal.h>
-#include <unistd.h>
 #include <sys/shm.h>
 #include <sys/sem.h>
-#include <sys/types.h>
 #include <time.h>
+#include <sys/wait.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <zconf.h>
+#include <semaphore.h>
 
 #include "common.h"
 
 struct barberShop *BARBER_SHOP;
-int SEMAPHORE_ID;
-int SHARED_MEMORY_ID;
-
+int SEMAPHORE;
+int SHARED_MEMORY_FD;
 
 void go_to_sleep()
 {
@@ -32,20 +33,18 @@ void wake_up()
 
 void invite_client()
 {
-    
+
     BARBER_SHOP->currentClientPid = pop(BARBER_SHOP);
 
-    print_text_and_pid("Barber: invited client ",  BARBER_SHOP->currentClientPid);
+    print_text_and_pid("Barber: invited client ", BARBER_SHOP->currentClientPid);
     BARBER_SHOP->barberStatus = READY;
 }
 
-
 void invite_client_after_awake()
 {
-    printf("inivite client %d \n",BARBER_SHOP->currentClientPid);
-    
+    printf("inivite client %d \n", BARBER_SHOP->currentClientPid);
 
-    print_text_and_pid("Barber: invited client after awake",  BARBER_SHOP->currentClientPid);
+    print_text_and_pid("Barber: invited client after awake", BARBER_SHOP->currentClientPid);
     BARBER_SHOP->barberStatus = READY;
 }
 
@@ -58,23 +57,20 @@ void end_clipping()
 
 void start_clipping()
 {
-    
+
     print_text_and_pid("Barber is clipping \n", BARBER_SHOP->currentClientPid);
-    
+
     BARBER_SHOP->barberStatus = BUSY;
 
     end_clipping();
 }
 
-
-
-void clean_up() {
-    if(SEMAPHORE_ID != 0) {
-        semctl(SEMAPHORE_ID, 0, IPC_RMID);
-    }
-    if(SHARED_MEMORY_ID != 0) {
-        shmctl(SHARED_MEMORY_ID, IPC_RMID, NULL);
-    }
+void clean_up()
+{
+    if (SEMAPHORE != 0)
+        sem_unlink(PROJECT_PATH);
+    if (SHARED_MEMORY_FD != 0)
+        shm_unlink(PROJECT_PATH);
 }
 
 void handler_SIGTERM(int signo)
@@ -82,23 +78,19 @@ void handler_SIGTERM(int signo)
     printf("Barber received signal SIGTERM \n");
 }
 
-int create_shared_memory()
+void create_shared_memory()
 {
-    key_t sharedMemoryKey = ftok(PROJECT_PATH, PROJECT_ID);
+    SHARED_MEMORY_FD = shm_open(
+        PROJECT_PATH,
+        O_RDWR | O_CREAT | O_EXCL,
+        S_IRWXU | S_IRWXG);
 
-    int sharedMemoryID = shmget(sharedMemoryKey, sizeof(struct barberShop), 0666 | IPC_CREAT);
-
-    SHARED_MEMORY_ID = sharedMemoryID;
-
-    if (sharedMemoryID == -1)
-        perror("Barber: failed to create shared memory\n");
-
-    return sharedMemoryID;
+    ftruncate(SHARED_MEMORY_FD, sizeof(*BARBER_SHOP));
 }
 
-void open_shared_memory(int sharedMemoryID)
+void open_shared_memory()
 {
-    BARBER_SHOP = shmat(sharedMemoryID, 0, 0);
+    BARBER_SHOP = mmap(NULL, sizeof(*BARBER_SHOP), PROT_READ | PROT_WRITE, MAP_SHARED, SHARED_MEMORY_FD, 0);
 
     if (BARBER_SHOP == (void *)-1)
         perror("Barber: faild to open shared memory\n");
@@ -109,9 +101,9 @@ void init_waiting_room(int numberOfSeats)
     if (numberOfSeats > MAX_WAITING_ROOM_SIZE)
         perror("Barber: wrong number of seats \n");
 
-    int sharedMemoryID = create_shared_memory();
+    create_shared_memory();
 
-    open_shared_memory(sharedMemoryID);
+    open_shared_memory();
 
     BARBER_SHOP->clientsInQueue = 0;
     BARBER_SHOP->currentClient = NULL;
@@ -122,23 +114,17 @@ void init_waiting_room(int numberOfSeats)
 
 void create_semaphore()
 {
-    key_t semaphoreKey = ftok(PROJECT_PATH, PROJECT_ID);
-
-    SEMAPHORE_ID = semget(semaphoreKey, 1, IPC_CREAT | 0666);
+    SEMAPHORE = sem_open(PROJECT_PATH, O_WRONLY | O_CREAT | O_EXCL, S_IRWXU | S_IRWXG, 0);
 }
 
 void start_barbershop()
 {
-    semctl(SEMAPHORE_ID, 0, SETVAL, 0);
     BARBER_SHOP->barberStatus = IDLE;
-
-    realise_lock(SEMAPHORE_ID);
 
     while (1)
     {
-        get_lock(SEMAPHORE_ID);
+        get_lock(SEMAPHORE);
 
-    
         switch (BARBER_SHOP->barberStatus)
         {
         case IDLE:
@@ -164,7 +150,7 @@ void start_barbershop()
             break;
         }
 
-        realise_lock(SEMAPHORE_ID);
+        realise_lock(SEMAPHORE);
     }
 }
 
@@ -182,7 +168,7 @@ int main(int argc, char *argv[])
 {
     int numberOfSeats = parse(argc, argv);
 
-    signal(SIGTERM,handler_SIGTERM);
+    signal(SIGTERM, handler_SIGTERM);
     atexit(clean_up);
 
     init_waiting_room(numberOfSeats);

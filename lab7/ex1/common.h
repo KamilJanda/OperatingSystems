@@ -32,9 +32,7 @@
 #define DONE 6
 #define WOKE_BARBER_UP 7
 
-/* struct barberShop *BARBER_SHOP;
-int SEMAPHORE_ID;
-int SHARED_MEMORY_ID; */
+
 
 struct client
 {
@@ -112,8 +110,6 @@ void get_lock(int semaphoreID)
     sops.sem_op = -1;
     sops.sem_flg = 0;
     semop(semaphoreID, &sops, 1);
-    //if (semop(semaphoreID, &sops, 1))
-        //perror("Failed to get semaphore \n");
 }
 
 //print

@@ -1,23 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
-#include <string.h>
 #include <signal.h>
-#include <unistd.h>
 #include <sys/shm.h>
 #include <sys/sem.h>
-#include <sys/types.h>
 #include <time.h>
+#include <sys/wait.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <zconf.h>
+#include <semaphore.h>
 
 #include <errno.h>
 
 #include "common.h"
 
 struct barberShop *BARBER_SHOP;
-int SEMAPHORE_ID;
-int SHARED_MEMORY_ID;
+sem_t* semaphore;
+int SHARED_MEMORY_FD;
 
 struct client *CURRENT_CLIENT;
 
@@ -117,7 +119,7 @@ void run_client(int numberOfClipping)
 
         while (left != 1)
         {
-            get_lock(SEMAPHORE_ID);
+            get_lock(semaphore);
 
             switch (CURRENT_CLIENT->clientStatus)
             {
@@ -143,7 +145,7 @@ void run_client(int numberOfClipping)
                 break;
             }
 
-            realise_lock(SEMAPHORE_ID);
+            realise_lock(semaphore);
         }
 
         free(CURRENT_CLIENT);
@@ -161,27 +163,21 @@ void spaw_client(int numberOfClipping)
 
 //Helpers
 
-int create_shared_memory()
+void create_shared_memory()
 {
-    key_t sharedMemoryKey = ftok(PROJECT_PATH, PROJECT_ID);
+    SHARED_MEMORY_FD = shm_open(PROJECT_PATH, O_RDWR, S_IRWXU | S_IRWXG);
 
-    if(sharedMemoryKey == -1)
-        perror("Client failed to get shared memory key\n");
-
-    //int sharedMemoryID = shmget(sharedMemoryKey, 0, 0);
-    int sharedMemoryID = shmget(sharedMemoryKey, sizeof(struct barberShop), 0);
-
-    if (sharedMemoryID == -1)
-        perror("Client: failed to create shared memory\n");
-
-    SHARED_MEMORY_ID = sharedMemoryID;
-
-    return sharedMemoryID;
+    ftruncate(SHARED_MEMORY_FD, sizeof(*BARBER_SHOP));
 }
 
-void open_shared_memory(int sharedMemoryID)
+void open_shared_memory()
 {
-    BARBER_SHOP = shmat(sharedMemoryID, 0, 0);
+    BARBER_SHOP = mmap(NULL,
+                      sizeof(*BARBER_SHOP),
+                      PROT_READ | PROT_WRITE,
+                      MAP_SHARED,
+                      SHARED_MEMORY_FD,
+                      0);
 
     if (BARBER_SHOP == (void *)-1)
         perror("Client: faild to open shared memory\n");
@@ -189,31 +185,22 @@ void open_shared_memory(int sharedMemoryID)
 
 void set_up_memory()
 {
-    SHARED_MEMORY_ID = create_shared_memory();
-    open_shared_memory(SHARED_MEMORY_ID);
+    create_shared_memory();
+    open_shared_memory();
 }
 
 void clean_up()
 {
-    if (SEMAPHORE_ID != 0)
-    {
-        semctl(SEMAPHORE_ID, 0, IPC_RMID);
-    }
-    if (SHARED_MEMORY_ID != 0)
-    {
-        shmctl(SHARED_MEMORY_ID, IPC_RMID, NULL);
-    }
+    if (semaphore != 0) sem_unlink(PROJECT_PATH);
+    if (SHARED_MEMORY_FD != 0) shm_unlink(PROJECT_PATH);
 }
 
 void create_semaphore()
 {
-    key_t semaphoreKey = ftok(PROJECT_PATH, PROJECT_ID);
+    semaphore = sem_open(PROJECT_PATH, O_WRONLY, S_IRWXU | S_IRWXG, 0);
 
-    SEMAPHORE_ID = semget(semaphoreKey, 1, IPC_CREAT | 0666);
-    //SEMAPHORE_ID = semget(semaphoreKey, 0, 0);
-
-    if (SEMAPHORE_ID == -1)
-        perror("Client failed to ceate semaphore \n");
+    if (semaphore == (void*) -1)
+        perror("Couldn't create semaphore\n");
 }
 
 void parse(int argc, char *argv[], int *numberOfClients, int *numberOfClipping)
@@ -232,7 +219,7 @@ int main(int argc, char *argv[])
 
     parse(argc, argv, &numberOfClients, &numberOfClipping);
 
-    atexit(clean_up);
+    //atexit(clean_up);
 
     set_up_memory();
     create_semaphore();

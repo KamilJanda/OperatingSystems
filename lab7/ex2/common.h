@@ -7,12 +7,19 @@
 #include <sys/shm.h>
 #include <sys/sem.h>
 #include <time.h>
+#include <sys/wait.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <zconf.h>
+#include <semaphore.h>
 
 #define MAX_WAITING_ROOM_SIZE 20
-#define PROJECT_PATH getenv("HOME")
-#define PROJECT_ID 1
 
-int SEMAPHORE_ID;
+#define PROJECT_PATH "/barbershop"
+
 
 //Barber status
 #define SLEEP 1
@@ -96,23 +103,16 @@ int is_full(struct barberShop *barberShop)
 
 //Semaphore
 
-void realise_lock(int semaphoreID)
+void realise_lock(sem_t* semaphore)
 {
-    struct sembuf sops;
-    sops.sem_num = 0;
-    sops.sem_op = 1;
-    sops.sem_flg = 0;
-    semop(semaphoreID, &sops, 1);
+    int error = sem_post(semaphore);
+    if (error == -1) perror("Semaphore error: %s");
 }
 
-void get_lock(int semaphoreID)
+void get_lock(sem_t* semaphore)
 {
-    struct sembuf sops;
-    sops.sem_num = 0;
-    sops.sem_op = -1;
-    sops.sem_flg = 0;
-    if (semop(semaphoreID, &sops, 1))
-        perror("Failed to get semaphore \n");
+    int error = sem_wait(semaphore);
+    if (error == -1) perror("Semaphore error: %s");
 }
 
 //print
