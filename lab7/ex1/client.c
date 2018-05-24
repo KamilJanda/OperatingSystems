@@ -226,6 +226,10 @@ void create_semaphore()
     key_t semaphoreKey = ftok(PROJECT_PATH, PROJECT_ID);
 
     SEMAPHORE_ID = semget(semaphoreKey, 1, IPC_CREAT | 0666);
+    //SEMAPHORE_ID = semget(semaphoreKey, 0, 0);
+
+    if(SEMAPHORE_ID == -1)
+        perror("Client failed to ceate semaphore \n");
 }
 
 void parse(int argc, char *argv[], int *numberOfClients, int *numberOfClipping)

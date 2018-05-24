@@ -12,7 +12,7 @@
 #define PROJECT_PATH getenv("HOME")
 #define PROJECT_ID 1
 
-/* int SEMAPHORE_ID; */
+
 
 //Barber status
 #define SLEEP 1
@@ -111,8 +111,9 @@ void get_lock(int semaphoreID)
     sops.sem_num = 0;
     sops.sem_op = -1;
     sops.sem_flg = 0;
-    if (semop(semaphoreID, &sops, 1))
-        perror("Failed to get semaphore \n");
+    semop(semaphoreID, &sops, 1);
+    //if (semop(semaphoreID, &sops, 1))
+        //perror("Failed to get semaphore \n");
 }
 
 //print
