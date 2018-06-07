@@ -1,0 +1,10 @@
+
+number of threads: 1,ms: 241041
+number of threads: 2,ms: 124238
+number of threads: 4,ms: 63161
+number of threads: 8,ms: 39709
+-----------------------------------------------------------------------------
+number of threads: 1,ms: 876360
+number of threads: 2,ms: 460628
+number of threads: 4,ms: 241743
+number of threads: 8,ms: 137427
