@@ -3,7 +3,8 @@
         "unistd.h": "c",
         "stdio.h": "c",
         "shm.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "cmath": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.errorSquiggles": "Disabled"

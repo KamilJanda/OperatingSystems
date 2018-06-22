@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
+#include <semaphore.h>
 #include <string.h>
 
 int EXTENDED_PRINT = 0;
@@ -11,11 +12,10 @@ typedef struct Monitor Monitor;
 
 struct Monitor
 {
-    pthread_mutex_t mutex;
+    
     int bufferSize;
     char **buffer;
     int count;
-    pthread_cond_t cond;
     int writeIndex;
     int readIndex;
     int producersNumber;
@@ -26,6 +26,10 @@ struct Monitor
     int nk;
     int full;
     FILE *file;
+
+    sem_t  read;
+    sem_t  write;
+    sem_t  string_cmp;
 
     char comparator;
 };
@@ -88,8 +92,9 @@ Monitor *init_monitor(char *path)
     for (int i = 0; i < monitor->bufferSize; ++i)
         monitor->buffer[i] = NULL;
 
-    monitor->mutex = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
-    monitor->cond = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
+    sem_init(&(monitor->read), 0, 0);
+    sem_init(&(monitor->write), 0, monitor->bufferSize);
+    sem_init(&(monitor->string_cmp), 0, 1);
 
     monitor->readIndex = 0;
     monitor->writeIndex = 0;
@@ -105,7 +110,7 @@ char *produce_item(Monitor *monitor)
     char* line = NULL;
     size_t size = 0;
     if ((getline(&line, &size, monitor->file)) < 0) {
-        return "eof\n";
+        return "eof";
     }
     return line;
 }
@@ -134,61 +139,54 @@ void consume_item(int L,char comp,char *item)
 
 
 
-void produce(Monitor *this)
+int produce(Monitor *this)
 {
-    pthread_mutex_lock(&this->mutex);
+    sem_wait(&(this->write));
+    sem_wait(&(this->string_cmp));
 
     if(EXTENDED_PRINT) printf("Producer get lock \n");
 
     char *item = produce_item(this);
 
-    //if (this->count == this->bufferSize)
-    while (this->full == 1)
-    {
-        //if(EXTENDED_PRINT) printf("Producer go to sleep \n");
-        pthread_cond_wait(&(this->cond), &(this->mutex));
-    }
+    if(strcmp("eof", item) == 0) return 0;
+
 
     if(EXTENDED_PRINT) printf("Producer write %s \n",item);
     this->buffer[this->writeIndex] = item;
 
     if ((this->writeIndex + 1) % this->bufferSize == this->readIndex) this->full = 1;
 
-    if (this->writeIndex == this->readIndex)
-    {
-        if(EXTENDED_PRINT) printf("Producer wake up consumer \n");
-        pthread_cond_broadcast(&(this->cond));
-    }
+    
 
     this->writeIndex = (this->writeIndex + 1) % this->bufferSize;
     this->count++;
 
 
-    if(EXTENDED_PRINT) printf("Producer unlock mutex\n");
-    pthread_mutex_unlock(&(this->mutex));
+    if(EXTENDED_PRINT) printf("Producer unlock sem\n");
+
+    sem_post(&(this->string_cmp));
+    sem_post(&(this->read));
+
+    return 1;
 }
 
 void *producer(void *ptr)
 {
     Monitor *monitor = (Monitor *)(ptr);
-    while (1)
-        produce(monitor);
+    while (produce(monitor));
+        
+    return 0;
 }
 
-
-
-int consume(Monitor *this)
+void consume(Monitor *this)
 {
-    pthread_mutex_lock(&this->mutex);
+    sem_wait(&(this->read));
+    sem_wait(&(this->string_cmp));
 
-    while (this->readIndex == this->writeIndex && this->full == 0)
-        pthread_cond_wait(&(this->cond), &(this->mutex));
 
-    if(EXTENDED_PRINT) printf("Consumer get mutex \n");
+    if(EXTENDED_PRINT) printf("Consumer get lock \n");
 
     char *item = this->buffer[this->readIndex];
-
-    if(strcmp("eof", item) == 0) return 0;
 
     consume_item(this->L,this->comparator,item);
 
@@ -198,24 +196,21 @@ int consume(Monitor *this)
     this->readIndex = (this->readIndex + 1) % this->bufferSize;
     this->count--;
 
-    //if (this->count == this->bufferSize - 1)
-        if(this->full == 1) {
-        this->full = 0;
-        pthread_cond_broadcast(&(this->cond));
-        }
-
-    pthread_mutex_unlock(&this->mutex);
-
-    return 1;
+    sem_post(&(this->string_cmp));
+    sem_post(&(this->write));
 }
 
 void *consumer(void *ptr)
 {
     Monitor *monitor = (Monitor *)(ptr);
-    while (consume(monitor))
-        ;
+    while (1)
+        consume(monitor);
+}
 
-    return 0;
+void destroy_sem(Monitor *monitor) {
+    sem_destroy(&(monitor->write));
+    sem_destroy(&(monitor->read));
+    sem_destroy(&(monitor->string_cmp));
 }
 
 // --- MAIN ---
@@ -247,6 +242,7 @@ int main(int argc, char *argv[])
         pthread_cancel(thr[i]);
     }
 
+    destroy_sem(monitor);
     free(thr);
 
     return 0;
